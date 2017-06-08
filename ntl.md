@@ -1,4 +1,4 @@
-# **nanoThallium** (ntl) - MISC ISA
+# **nanoThallium** (ntl) - RISC ISA
 
 nanoThallium or ntl for short is a reduced instruction set computing architecture __(RISC)__. It is meant to be basic, easy to implement and easy to understand.
 
@@ -10,9 +10,9 @@ ntl is a __load-store__ architecture, which means that memory access is done thr
 
 #### Register cheatsheet
 
-| Name | ID    | Description        |
-|------|-------|--------------------|
-| `fl` | `0x0` | __FL__ag register  |
+| Name  | ID    | Description        |
+|-------|-------|--------------------|
+| `rfl` | `0x0` | __FL__ag register  |
 
 ### Flag register
 
@@ -37,7 +37,7 @@ The `fl` register is the flag register, which stores some useful flags.
 
 The base ntl CPU has access to __8__ interrupts. An interrupt stops the regular operation of the CPU and is triggered by an internal or external signal. They can be enabled or disabled globally through the `_INTON` flag and individually enabled through the `_INTxON` flags.
 
-The `int` register is the offset to the Interrupt Descriptor Table. The IDT is a table with 8 entries of 16 bits. Each entry is an offset matching to an Interrupt Service Routine.
+The `ridt` register is the offset to the Interrupt Descriptor Table. The IDT is a table with 8 entries of 16 bits. Each entry is an offset matching to an Interrupt Service Routine.
 
 An ISR is a routine called when a matching interrupt is called. The return address matches to the instruction that should have been executed when being interrupted. However, there are things that the application programmer needs to be aware of:
 - An ISR is a regular, non-returning function.
@@ -60,8 +60,19 @@ An ISR is a routine called when a matching interrupt is called. The return addre
 | `pload`    | `rdst, raddr` | `0x03` | __LOAD__ from __P__rogram memory | `2`     |
 | `pstore`   | `rsrc, raddr` | `0x04` | __STORE__ to __P__rogram memory  | `2`     |
 | `mov`      | `rsrc, rdst`  | `0x05` | __MOV__e register                | `1`     |
+| `add`\*\*  | `ra, rb`      | `0x06` | __ADD__                          | `1`     |
+| `sub`\*\*  | `ra, rb`      | `0x07` | __SUB__tract                     | `1`     |
+| `mul`\*\*  | `ra, rb`      | `0x08` | __MUL__tiply                     | TBA     |
+| `div`\*\*  | `ra, rb`      | `0x09` | __DIV__ide                       | TBA     |
+| `and`\*\*  | `ra, rb`      | `0x0A` | Bitwise __AND__                  | `1`     |
+| `or`\*\*   | `ra, rb`      | `0x0B` | Bitwise __OR__                   | `1`     |
+| `xor`\*\*  | `ra, rb`      | `0x0C` | Bitwise __XOR__                  | `1`     |
+| `not`      | `ra, rdst`    | `0x0D` | Bitwise __NOT__                  | `1`     |
+| `shl`      | `ra, roff`    | `0x0C` | Bitwise __SH__ift __L__eft       | `1`     |
+| `shr`      | `ra, roff`    | `0x0D` | Bitwise __SH__ift __R__ight      | `1`     |
 
-\* Specified timings are the reference timing for the base VHDL implementation of ntl.
+\* Specified timings are the reference timing for the base VHDL implementation of ntl.  
+\*\* Arithmetic instructions such as `add` with two register operands stores their result to the `racc` register.
 
 ## Stack
 
@@ -69,6 +80,9 @@ An ISR is a routine called when a matching interrupt is called. The return addre
 
 ## Assembly language
 
-#### Keywords
+#### Notation
 
-Every identifier that begins with an underscore `_` is reserved.
+Identifiers are case sensitive. An user identifier can begin with any alphanumerical character. Built-in identifiers, such as flag offsets, may begin by `_`.  
+Register names are prefixed by `r`.
+
+#### Keywords
