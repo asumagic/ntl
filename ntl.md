@@ -75,7 +75,7 @@ An ISR is a routine called when a matching interrupt is called. The return addre
 | `shr`\*\*  | `ra, roff`    | `0x0D` | Bitwise __SH__ift __R__ight                   | `1`     |
 | `ashr`\*\* | `ra, roff`    | `0x0E` | __A__rithmetic __SH__ift __R__ight            | `1`     |
 | `gbit`\*\* | `ra, roff`    | `0x0F` | __G__et __BIT__ at offset to LSD              | `1`     |
-| `fbit`\*\* | `ra, roff`    | `0x0A` | __F__ip __BIT__ at offset                     | `1`     |
+| `fbit`\*\* | `ra, roff`    | `0x0A` | __F__lip __BIT__ at offset                    | `1`     |
 | `pop`      | `rdst`        | `0x0B` | __POP__ register from stack                   | `2`     |
 | `push`     | `rsrc`        | `0x0C` | __PUSH__ register to stack                    | `2`     |
 | `jmpi`     | `iaddr`       | `0x0D` | __J__u__MP__ to __I__mmediate                 | `1`     |
