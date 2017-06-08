@@ -88,6 +88,7 @@ An ISR is a routine called when a matching interrupt is called. The return addre
 | `thq`      | `ra, rb`      | `0x14` | __T__est: __H__igher or e__Q__ual to          | `1`     |
 | `teq`      | `ra, rb`      | `0x15` | __T__est: __EQ__ual to                        | `1`     |
 | `ldi`      | `ia`          | `0x16` | __L__oa__D__ __I__mmediate                    | `1`     |
+| `hlt`      |               | `0x17` | __H__a__LT__ CPU                              | `1`     |
 
 \* Specified timings are the reference timing for the base VHDL implementation of ntl.  
 \*\* Arithmetic instructions such as `add` with two operands stores their result to the `racc` register.
@@ -122,6 +123,11 @@ Stores the `rsrc register` to the instruction at memory address `raddr`.
 - ##### `mov rsrc, rdst` (`0x05`)
 
 Copy the register `rsrc` content to `rdst`.
+
+- ##### `hlt` (`0x17`)
+
+Halt the CPU and wait for an interrupt.  
+If interrupts are globally disabled, the CPU will halt and catch fire.
 
 ## Stack
 
