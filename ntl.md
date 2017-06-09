@@ -71,51 +71,55 @@ Port I/O is performed through the `read` and `write` instructions. Those operati
 
 #### Instruction encoding
 
+Instructions are encoded in a fixed size of **32** bits (2 words).
+
+| Name      | Range     | Description
+
+
 #### Opcode cheatsheet
 
-| Name       | Arguments     | ID     | Description                                   | Timing* |
-|------------|---------------|--------|-----------------------------------------------|---------|
-| `nop`      |               | `0x00` | __NO__ o__P__eration                          | `1`     |
-| `load`     | `rdst, raddr` | `0x01` | __LOAD__ from memory                          | `2`     |
-| `store`    | `rsrc, raddr` | `0x02` | __STORE__ to memory                           | `2`     |
-| `pload`    | `rdst, raddr` | `0x03` | __LOAD__ from __P__rogram memory              | `2`     |
-| `pstore`   | `rsrc, raddr` | `0x04` | __STORE__ to __P__rogram memory               | `2`     |
-| `mov`      | `rsrc, rdst`  | `0x05` | __MOV__e register                             | `1`     |
-| `add`\*\*  | `ra, rb`      | `0x06` | __ADD__                                       | `1`     |
-| `sub`\*\*  | `ra, rb`      | `0x07` | __SUB__tract                                  | `1`     |
-| `mul`\*\*  | `ra, rb`      | `0x08` | __MUL__tiply                                  | TBD     |
-| `div`\*\*  | `ra, rb`      | `0x09` | __DIV__ide                                    | TBD     |
-| `and`\*\*  | `ra, rb`      | `0x0A` | Bitwise __AND__                               | `1`     |
-| `or`\*\*   | `ra, rb`      | `0x0B` | Bitwise __OR__                                | `1`     |
-| `xor`\*\*  | `ra, rb`      | `0x0C` | Bitwise __XOR__                               | `1`     |
-| `not`      | `ra, rdst`    | `0x0D` | Bitwise __NOT__                               | `1`     |
-| `shl`\*\*  | `ra, roff`    | `0x0E` | Bitwise __SH__ift __L__eft                    | `1`     |
-| `shr`\*\*  | `ra, roff`    | `0x0F` | Bitwise __SH__ift __R__ight                   | `1`     |
-| `ashr`\*\* | `ra, roff`    | `0x10` | __A__rithmetic __SH__ift __R__ight            | `1`     |
-| `gbit`     | `ra, roff`    | `0x11` | __G__et __BIT__ at offset to LSD              | `1`     |
-| `fbit`     | `ra, roff`    | `0x12` | __F__lip __BIT__ at offset                    | `1`     |
-| `pop`      | `rdst`        | `0x13` | __POP__ register from stack                   | `2`     |
-| `push`     | `rsrc`        | `0x14` | __PUSH__ register to stack                    | `2`     |
-| `jmpi`     | `iaddr`       | `0x15` | __J__u__MP__ to __I__mmediate                 | `2`     |
-| `jmp`      | `raddr`       | `0x16` | __J__u__MP__                                  | `2`     |
-| `cjmpi`    | `iaddr`       | `0x17` | __C__onditional __J__u__MP__ to __I__mmediate | `2`     |
-| `cjmp`     | `raddr`       | `0x18` | __C__onditional __J__u__MP__                  | `2`     |
-| `ret`      |               | `0x19` | __RET__urn                                    | `2`     |
-| `calli`    | `iaddr`       | `0x1A` | __CALL I__mmediate function                   | TBD     |
-| `call`     | `raddr`       | `0x1B` | __CALL__ function                             | TBD     |
-| `tz`       | `ra`          | `0x1C` | __T__est: equal to __Z__ero                   | `1`     |
-| `tht`      | `ra, rb`      | `0x1D` | __T__est: __H__igher __T__han                 | `1`     |
-| `thq`      | `ra, rb`      | `0x1E` | __T__est: __H__igher or e__Q__ual to          | `1`     |
-| `teq`      | `ra, rb`      | `0x1F` | __T__est: __EQ__ual to                        | `1`     |
-| `ldi`      | `ia`          | `0x20` | __L__oa__D__ __I__mmediate                    | `1`     |
-| `hlt`      |               | `0x21` | __H__a__LT__ CPU                              | `1`     |
-| `read`     | `rdst, rport` | `0x22` | I/O __READ__                                  | `2`     |
-| `write`    | `rsrc, rport` | `0x23` | I/O __WRITE__                                 | `1`     |
-| `wait`     | `rport`       | `0x24` | I/O port __WAIT__                             | `1`     |
-| `int`      | `iid`         | `0x25` | Throw fake __INT__errupt                      | TBD     |
+| Name       | Arguments      | ID     | Description                                   | Timing* |
+|------------|----------------|--------|-----------------------------------------------|---------|
+| `nop`      |                  | `0x00` | __NO__ o__P__eration                          | `1`     |
+| `load`     | `rdst, raddr`    | `0x01` | __LOAD__ from memory                          | `2`     |
+| `store`    | `rsrc, raddr`    | `0x02` | __STORE__ to memory                           | `2`     |
+| `pload`    | `rdst, raddr`    | `0x03` | __LOAD__ from __P__rogram memory              | `2`     |
+| `pstore`   | `rsrc, raddr`    | `0x04` | __STORE__ to __P__rogram memory               | `2`     |
+| `mov`      | `rsrc, rdst`     | `0x05` | __MOV__e register                             | `1`     |
+| `add`      | `ra, rb, rdst`   | `0x06` | __ADD__                                       | `1`     |
+| `sub`      | `ra, rb, rdst`   | `0x07` | __SUB__tract                                  | `1`     |
+| `mul`      | `ra, rb, rdst`   | `0x08` | __MUL__tiply                                  | TBD     |
+| `div`      | `ra, rb, rdst`   | `0x09` | __DIV__ide                                    | TBD     |
+| `and`      | `ra, rb, rdst`   | `0x0A` | Bitwise __AND__                               | `1`     |
+| `or`       | `ra, rb, rdst`   | `0x0B` | Bitwise __OR__                                | `1`     |
+| `xor`      | `ra, rb, rdst`   | `0x0C` | Bitwise __XOR__                               | `1`     |
+| `not`      | `ra, rdst`       | `0x0D` | Bitwise __NOT__                               | `1`     |
+| `shl`      | `ra, roff, rdst` | `0x0E` | Bitwise __SH__ift __L__eft                    | `1`     |
+| `shr`      | `ra, roff, rdst` | `0x0F` | Bitwise __SH__ift __R__ight                   | `1`     |
+| `ashr`     | `ra, roff, rdst` | `0x10` | __A__rithmetic __SH__ift __R__ight            | `1`     |
+| `gbit`     | `ra, roff, rdst` | `0x11` | __G__et __BIT__ at offset to LSD              | `1`     |
+| `fbit`     | `ra, roff`       | `0x12` | __F__lip __BIT__ at offset                    | `1`     |
+| `pop`      | `rdst`           | `0x13` | __POP__ register from stack                   | `2`     |
+| `push`     | `rsrc`           | `0x14` | __PUSH__ register to stack                    | `2`     |
+| `jmpi`     | `iaddr`          | `0x15` | __J__u__MP__ to __I__mmediate                 | `2`     |
+| `jmp`      | `raddr`          | `0x16` | __J__u__MP__                                  | `2`     |
+| `cjmpi`    | `iaddr`          | `0x17` | __C__onditional __J__u__MP__ to __I__mmediate | `2`     |
+| `cjmp`     | `raddr`          | `0x18` | __C__onditional __J__u__MP__                  | `2`     |
+| `ret`      |                  | `0x19` | __RET__urn                                    | `2`     |
+| `calli`    | `iaddr`          | `0x1A` | __CALL I__mmediate function                   | TBD     |
+| `call`     | `raddr`          | `0x1B` | __CALL__ function                             | TBD     |
+| `tz`       | `ra`             | `0x1C` | __T__est: equal to __Z__ero                   | `1`     |
+| `tht`      | `ra, rb`         | `0x1D` | __T__est: __H__igher __T__han                 | `1`     |
+| `thq`      | `ra, rb`         | `0x1E` | __T__est: __H__igher or e__Q__ual to          | `1`     |
+| `teq`      | `ra, rb`         | `0x1F` | __T__est: __EQ__ual to                        | `1`     |
+| `ldi`      | `ia, rdst`       | `0x20` | __L__oa__D__ __I__mmediate                    | `1`     |
+| `hlt`      |                  | `0x21` | __H__a__LT__ CPU                              | `1`     |
+| `read`     | `rdst, rport`    | `0x22` | I/O __READ__                                  | `2`     |
+| `write`    | `rsrc, rport`    | `0x23` | I/O __WRITE__                                 | `1`     |
+| `wait`     | `rport`          | `0x24` | I/O port __WAIT__                             | `1`     |
+| `int`      | `iid`            | `0x25` | Throw fake __INT__errupt                      | TBD     |
 
 \* Specified timings are the reference timing for the base VHDL implementation of ntl.  
-\*\* Arithmetic instructions such as `add` with two operands stores their result to the `racc` register.
 
 #### Opcode detailed information
 
@@ -147,41 +151,41 @@ Stores the `rsrc register` to the instruction at memory address `raddr`.
 
 Copy the register `rsrc` content to `rdst`.
 
-- ##### `add ra, rb` (`0x06`)
+- ##### `add ra, rb, rdst` (`0x06`)
 
 Integer addition.  
-Perform `ra + rb` and store to `racc`.
+Perform `ra + rb` and store to `rdst`.
 
-- ##### `sub ra, rb` (`0x07`)
+- ##### `sub ra, rb, rdst` (`0x07`)
 
 Integer subtraction.  
-Perform `ra - rb` and store to `racc`.
+Perform `ra - rb` and store to `rdst`.
 
-- ##### `mul ra, rb` (`0x08`)
+- ##### `mul ra, rb, rdst` (`0x08`)
 
 Integer multiplication.  
-Perform `ra * rb` and store to `racc`.
+Perform `ra * rb` and store to `rdst`.
 
-- ##### `div ra, rb` (`0x09`)
+- ##### `div ra, rb, rdst` (`0x09`)
 
 Integer division.  
-Perform `ra / rb` and store to `racc`.  
+Perform `ra / rb` and store to `rdst`.  
 If `rb` is zero, a `_ARITHMETIC` CPU exception will rise.
 
-- ##### `and ra, rb` (`0x0A`)
+- ##### `and ra, rb, rdst` (`0x0A`)
 
 Bitwise AND.  
-Perform `ra & rb` and store to `racc`.
+Perform `ra & rb, rdst` and store to `rdst`.
 
 - ##### `or ra, rb` (`0x0B`)
 
 Bitwise OR.  
-Perform `ra | rb` and store to `racc`.
+Perform `ra | rb` and store to `rdst`.
 
-- ##### `xor ra, rb` (`0x0C`)
+- ##### `xor ra, rb, rdst` (`0x0C`)
 
 Bitwise exclusive OR (XOR).  
-Perform `ra ^ rb` and store to `racc`.  
+Perform `ra ^ rb` and store to `rdst`.  
 Using `xor ra, ra` will effectively clear the register.
 
 - ##### `not ra, rdst` (`0x0D`)
@@ -189,27 +193,27 @@ Using `xor ra, ra` will effectively clear the register.
 Bitwise NOT.  
 Perform `~ra` and store to `rdst`.
 
-- ##### `shl ra, roff` (`0x0E`)
+- ##### `shl ra, roff, rdst` (`0x0E`)
 
 Bitwise bitshift left.  
-Perform `ra << roff` and store to `racc`.  
+Perform `ra << roff` and store to `rdst`.  
 The bits appearing on the right are `0`.
 
-- ##### `shr ra, roff` (`0x0F`)
+- ##### `shr ra, roff, rdst` (`0x0F`)
 
 Bitwise bitshift left.  
-Perform `ra << roff` and store to `racc`.  
+Perform `ra << roff` and store to `rdst`.  
 The bits appearing on the left are `0`.
 
-- ##### `ashr ra, roff` (`0x10`)
+- ##### `ashr ra, roff, rdst` (`0x10`)
 
 Arithmetic bitshift right.  
-It behaves similarly to a bitwise bitshift right, but the MSB is copied over the `racc` destination.
+It behaves similarly to a bitwise bitshift right, but the MSB is copied over the `rdst` destination.
 
-- ##### `gbit ra, roff` (`0x11`)
+- ##### `gbit ra, roff, rdst` (`0x11`)
 
 Get bit at offset.  
-The bit of `ra` at offset `roff` is copied to the LSB of `racc`.
+The bit of `ra` at offset `roff` is copied to the LSB of `rdst`.
 
 - ##### `fbit ra, roff` (`0x12`)
 
@@ -291,10 +295,10 @@ Sets the `_TEST` flag if `ra >= rb`.
 Test for equality.  
 Sets the `_TEST` flag if `ra == rb`.
 
-- ##### `ldi ia` (`0x20`)
+- ##### `ldi ia, rdst` (`0x20`)
 
 Load immediate value.  
-Stores the `ia` value to `racc`.
+Stores the `ia` value to `rdst`.
 
 - ##### `hlt` (`0x21`)
 
