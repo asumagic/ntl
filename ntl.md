@@ -71,9 +71,16 @@ Port I/O is performed through the `read` and `write` instructions. Those operati
 
 #### Instruction encoding
 
-Instructions are encoded in a fixed size of **32** bits (2 words).
+Instructions have a fixed size of **32** bits (2 words). However, the internal structure of the instruction may vary. If the opcode always appears in the first byte, the other operands may not be used by instructions. In this case, the CPU will ignore these bits.  
+Some areas like the register operand `#3` range overlaps the immediate range, in which case the instruction will not use both.
 
-| Name      | Range     | Description
+| Name                  | Range          |
+|-----------------------|----------------|
+| Opcode                | `0x00`->`0x07` |
+| Register operand `#1` | `0x08`->`0x0B` |
+| Register operand `#2` | `0x0C`->`0x0F` |
+| Register operand `#3` | `0x10`->`0x13` |
+| Immediate             | `0x10`->`0x1F` |
 
 
 #### Opcode cheatsheet
