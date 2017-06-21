@@ -4,7 +4,7 @@ nanoThallium or ntl for short is a reduced instruction set computing architectur
 
 ## Memory and registers
 
-The 16 registers are __16-bit__ wide. Memory addressing is __16-bit__, and the memory atom type is __16-bit__, effectively enabling ~1Mbit memory. On the bootup, every register defaults to `0`.
+The 16 registers are __16-bit__ wide. Memory addressing is __16-bit__, and the memory atom type is __16-bit__, effectively enabling 128KiB memory. On the bootup, every register defaults to `0`.
 
 ntl is a __load-store__ architecture, which means that memory access is done through special instructions. It is a __modified Harvard__ architecture, so the scratchpad memory and the program memory are separate, but can be accessed through separate instructions.
 
