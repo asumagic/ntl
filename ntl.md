@@ -58,9 +58,10 @@ An ISR is a routine called when a matching interrupt is called. The return addre
 
 A CPU exception is a special interrupt that cannot be disabled. Unlike other interrupts, it requires a special ISR to handle the CPU exception ID, which is pushed on the stack as a parameter. When a CPU exception rises while `_INTLOCK` or `_INTON` is set, the CPU will halt. The following CPU exception IDs exist:
 
-| Name          | ID       |
-|---------------|----------|
-| `_ARITHMETIC` | `0x0000` |
+| Name          | ID       | Description          |
+|---------------|----------|----------------------|
+| `_ARITHMETIC` | `0x0000` | Arithmetic exception |
+| `_ILLOP`      | `0x0001` | Illegal operation    |
 
 #### Port I/O
 
