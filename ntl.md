@@ -10,11 +10,12 @@ ntl is a __load-store__ architecture, which means that memory access is done thr
 
 #### Register cheatsheet
 
-| Name   | ID    | Description        |
-|--------|-------|--------------------|
-| `rfl`  | `0x0` | __FL__ag register  |
-| `ridt` | `0x1` | __IDT__ address    |
-| `racc` | `0x2` | __ACC__umulator    |
+| Name   | ID    | Description           |
+|--------|-------|-----------------------|
+| `rfl`  | `0x0` | __FL__ag register     |
+| `ridt` | `0x1` | __IDT__ address       |
+| `racc` | `0x2` | __ACC__umulator       |
+| `rsp`  | `0x3` | __S__tack __P__ointer |
 
 ### Flag register
 
@@ -71,7 +72,7 @@ Port I/O is performed through the `read` and `write` instructions. Those operati
 
 #### Instruction encoding
 
-Instructions have a fixed size of **32** bits (2 words). However, the internal structure of the instruction may vary. If the opcode always appears in the first byte, the other operands may not be used by instructions. In this case, the CPU will ignore these bits.  
+Instructions have a fixed size of **32** bits (2 CPU words). Instruction memory addressing has a word size of 16 bits, similarly to the scratchpad memory. However, the internal structure of the instruction may vary. If the opcode always appears in the first byte, the other operands may not be used by instructions. In this case, the CPU will ignore these bits.  
 Some areas like the register operand `#3` range overlaps the immediate range, in which case the instruction will not use both.
 
 | Name                  | Range          |
@@ -85,46 +86,46 @@ Some areas like the register operand `#3` range overlaps the immediate range, in
 
 #### Opcode cheatsheet
 
-| Name       | Arguments      | ID     | Description                                   | Timing* |
-|------------|----------------|--------|-----------------------------------------------|---------|
-| `nop`      |                  | `0x00` | __NO__ o__P__eration                          | `1`     |
-| `load`     | `rdst, raddr`    | `0x01` | __LOAD__ from memory                          | `2`     |
-| `store`    | `rsrc, raddr`    | `0x02` | __STORE__ to memory                           | `2`     |
-| `pload`    | `rdst, raddr`    | `0x03` | __LOAD__ from __P__rogram memory              | `2`     |
-| `pstore`   | `rsrc, raddr`    | `0x04` | __STORE__ to __P__rogram memory               | `2`     |
-| `mov`      | `rsrc, rdst`     | `0x05` | __MOV__e register                             | `1`     |
-| `add`      | `ra, rb, rdst`   | `0x06` | __ADD__                                       | `1`     |
-| `sub`      | `ra, rb, rdst`   | `0x07` | __SUB__tract                                  | `1`     |
-| `mul`      | `ra, rb, rdst`   | `0x08` | __MUL__tiply                                  | TBD     |
-| `div`      | `ra, rb, rdst`   | `0x09` | __DIV__ide                                    | TBD     |
-| `and`      | `ra, rb, rdst`   | `0x0A` | Bitwise __AND__                               | `1`     |
-| `or`       | `ra, rb, rdst`   | `0x0B` | Bitwise __OR__                                | `1`     |
-| `xor`      | `ra, rb, rdst`   | `0x0C` | Bitwise __XOR__                               | `1`     |
-| `not`      | `ra, rdst`       | `0x0D` | Bitwise __NOT__                               | `1`     |
-| `shl`      | `ra, roff, rdst` | `0x0E` | Bitwise __SH__ift __L__eft                    | `1`     |
-| `shr`      | `ra, roff, rdst` | `0x0F` | Bitwise __SH__ift __R__ight                   | `1`     |
-| `ashr`     | `ra, roff, rdst` | `0x10` | __A__rithmetic __SH__ift __R__ight            | `1`     |
-| `gbit`     | `ra, roff, rdst` | `0x11` | __G__et __BIT__ at offset to LSD              | `1`     |
-| `fbit`     | `ra, roff`       | `0x12` | __F__lip __BIT__ at offset                    | `1`     |
-| `pop`      | `rdst`           | `0x13` | __POP__ register from stack                   | `2`     |
-| `push`     | `rsrc`           | `0x14` | __PUSH__ register to stack                    | `2`     |
-| `jmpi`     | `iaddr`          | `0x15` | __J__u__MP__ to __I__mmediate                 | `2`     |
-| `jmp`      | `raddr`          | `0x16` | __J__u__MP__                                  | `2`     |
-| `cjmpi`    | `iaddr`          | `0x17` | __C__onditional __J__u__MP__ to __I__mmediate | `2`     |
-| `cjmp`     | `raddr`          | `0x18` | __C__onditional __J__u__MP__                  | `2`     |
-| `ret`      |                  | `0x19` | __RET__urn                                    | `2`     |
-| `calli`    | `iaddr`          | `0x1A` | __CALL I__mmediate function                   | TBD     |
-| `call`     | `raddr`          | `0x1B` | __CALL__ function                             | TBD     |
-| `tz`       | `ra`             | `0x1C` | __T__est: equal to __Z__ero                   | `1`     |
-| `tht`      | `ra, rb`         | `0x1D` | __T__est: __H__igher __T__han                 | `1`     |
-| `thq`      | `ra, rb`         | `0x1E` | __T__est: __H__igher or e__Q__ual to          | `1`     |
-| `teq`      | `ra, rb`         | `0x1F` | __T__est: __EQ__ual to                        | `1`     |
-| `ldi`      | `ia, rdst`       | `0x20` | __L__oa__D__ __I__mmediate                    | `1`     |
-| `hlt`      |                  | `0x21` | __H__a__LT__ CPU                              | `1`     |
-| `read`     | `rdst, rport`    | `0x22` | I/O __READ__                                  | `2`     |
-| `write`    | `rsrc, rport`    | `0x23` | I/O __WRITE__                                 | `1`     |
-| `wait`     | `rport`          | `0x24` | I/O port __WAIT__                             | `1`     |
-| `int`      | `iid`            | `0x25` | Throw fake __INT__errupt                      | TBD     |
+| Name       | Arguments             | ID     | Description                                   | Timing* |
+|------------|-----------------------|--------|-----------------------------------------------|---------|
+| `nop`      |                       | `0x00` | __NO__ o__P__eration                          | `1`     |
+| `load`     | `rdst, raddr`         | `0x01` | __LOAD__ from memory                          | `2`     |
+| `store`    | `rsrc, raddr`         | `0x02` | __STORE__ to memory                           | `2`     |
+| `pload`    | `rdst, raddr`         | `0x03` | __LOAD__ from __P__rogram memory              | `2`     |
+| `pstore`   | `rsrc, raddr`         | `0x04` | __STORE__ to __P__rogram memory               | `2`     |
+| `mov`      | `rsrc, rdst`          | `0x05` | __MOV__e register                             | `1`     |
+| `add`      | `ra, rb, rdst`        | `0x06` | __ADD__                                       | `1`     |
+| `sub`      | `ra, rb, rdst`        | `0x07` | __SUB__tract                                  | `1`     |
+| `mul`      | `ra, rb, rdst`        | `0x08` | __MUL__tiply                                  | TBD     |
+| `div`      | `ra, rb, rdst`        | `0x09` | __DIV__ide                                    | TBD     |
+| `and`      | `ra, rb, rdst`        | `0x0A` | Bitwise __AND__                               | `1`     |
+| `or`       | `ra, rb, rdst`        | `0x0B` | Bitwise __OR__                                | `1`     |
+| `xor`      | `ra, rb, rdst`        | `0x0C` | Bitwise __XOR__                               | `1`     |
+| `not`      | `ra, rdst`            | `0x0D` | Bitwise __NOT__                               | `1`     |
+| `shl`      | `ra, roff, rdst`      | `0x0E` | Bitwise __SH__ift __L__eft                    | `1`     |
+| `shr`      | `ra, roff, rdst`      | `0x0F` | Bitwise __SH__ift __R__ight                   | `1`     |
+| `ashr`     | `ra, roff, rdst`      | `0x10` | __A__rithmetic __SH__ift __R__ight            | `1`     |
+| `gbit`     | `ra, roff, rdst`      | `0x11` | __G__et __BIT__ at offset to LSD              | `1`     |
+| `fbit`     | `ra, roff`            | `0x12` | __F__lip __BIT__ at offset                    | `1`     |
+| `pop`      | `rdst`                | `0x13` | __POP__ register from stack                   | `2`     |
+| `push`     | `rsrc`                | `0x14` | __PUSH__ register to stack                    | `2`     |
+| `jmpi`     | `iaddr`               | `0x15` | __J__u__MP__ to __I__mmediate                 | `2`     |
+| `jmp`      | `raddr`               | `0x16` | __J__u__MP__                                  | `2`     |
+| `cjmpi`    | `iaddr`               | `0x17` | __C__onditional __J__u__MP__ to __I__mmediate | `2`     |
+| `cjmp`     | `raddr`               | `0x18` | __C__onditional __J__u__MP__                  | `2`     |
+| `ret`      |                       | `0x19` | __RET__urn                                    | `2`     |
+| `calli`    | `iaddr`               | `0x1A` | __CALL I__mmediate function                   | TBD     |
+| `call`     | `raddr`               | `0x1B` | __CALL__ function                             | TBD     |
+| `tz`       | `ra`                  | `0x1C` | __T__est: equal to __Z__ero                   | `1`     |
+| `tht`      | `ra, rb`              | `0x1D` | __T__est: __H__igher __T__han                 | `1`     |
+| `thq`      | `ra, rb`              | `0x1E` | __T__est: __H__igher or e__Q__ual to          | `1`     |
+| `teq`      | `ra, rb`              | `0x1F` | __T__est: __EQ__ual to                        | `1`     |
+| `ldi`      | `ia, rdst`            | `0x20` | __L__oa__D__ __I__mmediate                    | `1`     |
+| `hlt`      |                       | `0x21` | __H__a__LT__ CPU                              | `1`     |
+| `read`     | `rdst, rport`         | `0x22` | I/O __READ__                                  | `2`     |
+| `write`    | `rsrc, rport`         | `0x23` | I/O __WRITE__                                 | `1`     |
+| `wait`     | `rport`               | `0x24` | I/O port __WAIT__                             | `1`     |
+| `int`      | `iid`                 | `0x25` | Throw fake __INT__errupt                      | TBD     |
 
 \* Specified timings are the reference timing for the base VHDL implementation of ntl.  
 
@@ -137,22 +138,22 @@ No operation instruction. Does not alter the CPU state.
 - ##### `load rdst, raddr` (`0x01`)
 
 Load from scratchpad memory.  
-Loads the 16-bit word at memory address `raddr` and stores it to `rdst`.
+Loads the 16-bit word at memory address `raddr` in scratchpad memory and stores it to `rdst`.
 
 - ##### `store rsrc, raddr` (`0x02`)
 
 Store to scratchpad memory.  
-Stores the `rsrc` register to the word at memory address `raddr`.
+Stores the `rsrc` register to the word at memory address `raddr` in scratchpad memory.
 
-- ##### `pload rdst, raddr` (`0x03`)
+- ##### `pload rsrc, raddr` (`0x03`)
 
 Load from program memory.  
-Loads the 16-bit instruction at memory address `raddr` and stores it to `rdst`.
+Loads the 16-bit word at memory address `raddr` in program memory and it to `rdst`.
 
-- ##### `pstore rsrc, raddr` (`0x04`)
+- ##### `pstore rdst, raddr` (`0x04`)
 
 Store to program memory.  
-Stores the `rsrc register` to the instruction at memory address `raddr`.
+Stores to the `rsrc` register to the word at memory address `raddr` in program memory.
 
 - ##### `mov rsrc, rdst` (`0x05`)
 
