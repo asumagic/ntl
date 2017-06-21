@@ -121,7 +121,7 @@ Some areas like the register operand `#3` range overlaps the immediate range, in
 | `tht`      | `ra, rb`              | `0x1D` | __T__est: __H__igher __T__han                 | `1`     |
 | `thq`      | `ra, rb`              | `0x1E` | __T__est: __H__igher or e__Q__ual to          | `1`     |
 | `teq`      | `ra, rb`              | `0x1F` | __T__est: __EQ__ual to                        | `1`     |
-| `ldi`      | `ia, rdst`            | `0x20` | __L__oa__D__ __I__mmediate                    | `1`     |
+| `ldi`      | `rdst, ia`            | `0x20` | __L__oa__D__ __I__mmediate                    | `1`     |
 | `hlt`      |                       | `0x21` | __H__a__LT__ CPU                              | `1`     |
 | `read`     | `rdst, rport`         | `0x22` | I/O __READ__                                  | `2`     |
 | `write`    | `rsrc, rport`         | `0x23` | I/O __WRITE__                                 | `1`     |
@@ -304,7 +304,7 @@ Sets the `_TEST` flag if `ra >= rb`.
 Test for equality.  
 Sets the `_TEST` flag if `ra == rb`.
 
-- ##### `ldi ia, rdst` (`0x20`)
+- ##### `ldi rdst, ia` (`0x20`)
 
 Load immediate value.  
 Stores the `ia` value to `rdst`.
