@@ -389,9 +389,10 @@ These expands into a 16-bit memory address, that can be directly used as an imme
 
 Assembler directives allows using assembly or assembler related features not available otherwise. These are prefixed by `.`. For example, the `.at` directive forces the following instruction to be located at that specific area.
 
-| Name  | Description                           |
-|-------|---------------------------------------|
-| `.at` | Force the assembler location counter. |
+| Name       | Description                           |
+|------------|---------------------------------------|
+| `.at`      | Force the assembler location counter. |
+| `.include` | Include a file within this file.      |
 
 - ##### `.at`
 
@@ -405,15 +406,25 @@ In other words, the next instruction (or assembler directive) will be located at
 This piece of code will have the `mov racc, r0` instruction located at `0x1000` in the flat binary. Do remember that the memory word is 16-bit in ntl, so the actual byte offset would be `0x2000`.  
 The instruction that follows naturally is located at `0x1002`.
 
-#### Instruction aliases
+- ##### `.include`
 
-Some instruction aliases are exposed to the assembler for convenience. They are always prefixed by `$` to differenciate them from regular instructions, and may emit one or more instructions.
+Includes a file.  
+Including a file copies its content at the position of the `.include` directive in the current file.
 
-| Alias    | Alias arguments | Aliased instructions          |
-|----------|-----------------|-------------------------------|
-| `$tnz`   | `ra`            | `tz ra; fbit rfl, _TEST`      |
-| `$tlt`   | `ra, rb`        | `tht ra, rb; fbit rfl, _TEST` |
-| `$tlq`   | `ra, rb`        | `tlq ra, rb; fbit rfl, _TEST` |
-| `$tnq`   | `ra, rb`        | `teq ra, rb; fbit rfl, _TEST` |
+Example:
+
+`b.nts` file:
+
+	%someFunction
+		add rg0, rg1
+		ret
+
+`a.nts` file:
+
+	.include "b.nts"
+	%main
+		ldi rg0, 8
+		ldi rg1, 2
+		calli someFunction
 
 #### Warnings and errors
