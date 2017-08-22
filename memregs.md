@@ -1,4 +1,9 @@
-## Memory and registers
+---
+title: Memory and registers
+---
+
+Memory and registers
+=====
 
 The 16 registers are __16-bit__ wide. Memory addressing is __16-bit__, and the memory atom type is __16-bit__, effectively enabling 128KiB memory. On the bootup, every register defaults to `0`.
 

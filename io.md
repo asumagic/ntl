@@ -1,4 +1,9 @@
-## IO & interrupts
+---
+title: I/O and interrupts
+---
+
+I/O and interrupts
+=====
 
 #### Interrupts
 

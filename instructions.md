@@ -1,4 +1,9 @@
-## Instructions
+---
+title: Instructions
+---
+
+Instructions
+=====
 
 #### Instruction encoding
 
