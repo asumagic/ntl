@@ -56,12 +56,13 @@ An ISR is a routine called when a matching interrupt is called. The return addre
 
 ##### CPU exceptions (Interrupt `0`)
 
-A CPU exception is a special interrupt that cannot be disabled. Unlike other interrupts, it requires a special ISR to handle the CPU exception ID, which is pushed on the stack as a parameter. When a CPU exception rises while `_INTLOCK` or `_INTON` is set, the CPU will halt. The following CPU exception IDs exist:
+A CPU exception is a special interrupt that cannot be disabled. Unlike other interrupts, it requires a special ISR to handle the CPU exception ID, which is pushed on the stack as a parameter. When a CPU exception rises while `_INTLOCK` is set or `_INTON` is disabled, the CPU will halt. The following CPU exception IDs exist:
 
-| Name          | ID       | Description          |
-|---------------|----------|----------------------|
-| `_ARITHMETIC` | `0x0000` | Arithmetic exception |
-| `_ILLOP`      | `0x0001` | Illegal operation    |
+| Name          | ID       | Description               |
+|---------------|----------|---------------------------|
+| `_ARITHMETIC` | `0x0000` | Arithmetic exception      |
+| `_ILLOP`      | `0x0001` | Illegal operation         |
+| `_UNIMPL`     | `0x0002` | Incomplete implementation |
 
 #### Port I/O
 
@@ -87,7 +88,7 @@ Some areas like the register operand `#3` range overlaps the immediate range, in
 
 #### Opcode cheatsheet
 
-| Name       | Arguments             | ID     | Description                                   | Timing* |
+| Mnemonic   | Arguments             | ID     | Description                                   | Timing* |
 |------------|-----------------------|--------|-----------------------------------------------|---------|
 | `nop`      |                       | `0x00` | __NO__ o__P__eration                          | `1`     |
 | `load`     | `rdst, raddr`         | `0x01` | __LOAD__ from memory                          | `2`     |
@@ -350,22 +351,19 @@ Register names are prefixed by `r`.
 
 #### Instructions
 
-An instruction is defined by writing its name, followed by a space and an argument list, if required. Arguments in the argument list are separated by a comma `,`. For example:
+An instruction is defined by writing its mnemonic, followed by a space and an operand list, if required. Operands in the operand list are separated by whitespace characters. Operands can be an immediate value or a register name. For example:
 
-`mov racc, r0`
+`mov racc r0`
 
-This is read as a `mov` instruction, with the `racc` register as the first operand and `r0` as the second operand. When the amount of arguments in the argument list does not match to what the instruction expects, an error occurs.
+This is read as a `mov` instruction, with the `racc` register as the first operand and `r0` as the second operand. When the amount of arguments in the operand list does not match to what the instruction expects, an error occurs.  
+Newlines separate instructions.
 
-Both newlines and semicolons `;` may separate instructions. In this case:
+#### Immediates
 
-    mov racc, r0
-    mov racc, r1
+Immediate values can represent any value. Those can be determined directly at compile-time.
 
-is interpreted the same way as
-
-    mov racc, r0; mov racc, r1
-
-Empty instructions are ignored, so `;;;;` is not a syntax error and will emit _nothing_ (not the `nop` instruction either).
+Labels will expand into an offset value in the program.  
+Integral values will expand appropriately in the program as required. Those can be written in decimal (`1234`), hexadecimal (`0x` prefixed - `0xBEEF`) or binary (`0b` prefixed - `0b1100`).  
 
 #### Comments
 
@@ -377,24 +375,18 @@ Comments are pieces of text that are ignored by the assembler and not parsed in 
     mov racc, r1
     # mov racc, r2 - commented instructions are ignored
 
-#### Labels
-
-Labels denotes a memory offset to the program space to the following instruction or assembler directive, if applicable. Label names are prefixed by `%` and are user defined.  
-These expands into a 16-bit memory address, that can be directly used as an immediate argument for an instruction such as `calli` or `jmpi`.
-
-    %infiniteLoop
-      jmpi %infiniteLoop
-
 #### Assembler directives
 
 Assembler directives allows using assembly or assembler related features not available otherwise. These are prefixed by `.`. For example, the `.at` directive forces the following instruction to be located at that specific area.
 
-| Name       | Description                           |
-|------------|---------------------------------------|
-| `.at`      | Force the assembler location counter. |
-| `.include` | Include a file within this file.      |
+| Name       | Description                                   |
+|------------|-----------------------------------------------|
+| `.at`      | Force the assembler location counter.         |
+| `.data`    | Inline an immediate value within the program. |
+| `.include` | Include a file within this file.              |
+| `.label`   | Define a reference to the next word.          |
 
-- ##### `.at`
+- ##### `.at offset`
 
 Forces the assembler location counter.  
 In other words, the next instruction (or assembler directive) will be located at the given offset in the resulting flat binary.
@@ -406,6 +398,17 @@ In other words, the next instruction (or assembler directive) will be located at
 This piece of code will have the `mov racc, r0` instruction located at `0x1000` in the flat binary. Do remember that the memory word is 16-bit in ntl, so the actual byte offset would be `0x2000`.  
 The instruction that follows naturally is located at `0x1002`.
 
+- ##### `.data size data`
+
+Inline an immediate value within the program binary. Extra bits will be filled with zero.
+
+	.data 8 0xDEADBEEF
+	.data 11 "hello world"
+
+This example will hold, in program memory:
+
+	BEEF DEAD 0000 0000 6865 6C6C 6F20 776F 726C 0064
+
 - ##### `.include`
 
 Includes a file.  
@@ -415,16 +418,23 @@ Example:
 
 `b.nts` file:
 
-	%someFunction
+	.label someFunction
 		add rg0, rg1
 		ret
 
 `a.nts` file:
 
 	.include "b.nts"
-	%main
+	.label main
 		ldi rg0, 8
 		ldi rg1, 2
 		calli someFunction
 
+- ##### `.label`
+
+Defines a label, that is, a macro variable to the next encountered word.  
+
+	.label infiniteLoop
+		jmpi infiniteLoop
+		
 #### Warnings and errors
