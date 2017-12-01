@@ -6,7 +6,7 @@ Memory and registers
 =====
 
 The 16 registers are __16-bit__ wide. Memory addressing is __16-bit__, and the memory atom type is __16-bit__, effectively enabling 128KiB memory.  
-When the machine is initialized, every register defaults to `0`.
+When the machine is initialized, every register defaults to `0`. However, `rip` may be initialized to a different value; for example, if firmware code is loaded within the MMIO range.
 
 ntl is a __load-store__ architecture - all memory accesses are performed through `load` and `store`.  
 It is a __von Neumann__ architecture, so the data and program memory are the same.
