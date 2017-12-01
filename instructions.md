@@ -7,8 +7,9 @@ Instructions
 
 #### Instruction encoding
 
-Instructions have a fixed size of **32** bits (2 CPU words). Instruction memory addressing has a word size of 16 bits, similarly to the scratchpad memory. However, the internal structure of the instruction may vary. If the opcode always appears in the first byte, the other operands may not be used by instructions. In this case, the CPU will ignore these bits.  
-Some areas like the register operand `#3` range overlaps the immediate range, in which case the instruction will not use both.
+Instructions have a fixed size of **32** bits (2 CPU words). However, the internal structure of the instruction may vary.  
+The opcode always appears in the first byte, but the other operands may not be used by instructions. In this case, the implementation will ignore these bits.  
+Some ranges may overlap, however, instructions will never use arguments in such a way their ranges could overlap.
 
 | Name                  | Range          |
 |-----------------------|----------------|
@@ -24,10 +25,8 @@ Some areas like the register operand `#3` range overlaps the immediate range, in
 | Mnemonic   | Arguments             | ID     | Description                                   |
 |------------|-----------------------|--------|-----------------------------------------------|
 | `nop`      |                       | `0x00` | No operation                                  |
-| `load`     | `rdst, raddr`         | `0x01` | Load from scratchpad memory                   |
-| `store`    | `rsrc, raddr`         | `0x02` | Store to scratchpad memory                    |
-| `pload`    | `rdst, raddr`         | `0x03` | Load from program memory                      |
-| `pstore`   | `rsrc, raddr`         | `0x04` | Store to program memory                       |
+| `load`     | `rdst, raddr`         | `0x01` | Load from memory                              |
+| `store`    | `rsrc, raddr`         | `0x02` | Store to memory                               |
 | `mov`      | `rsrc, rdst`          | `0x05` | Copy register value                           |
 | `add`      | `ra, rb, rdst`        | `0x06` | Integer addition                              |
 | `sub`      | `ra, rb, rdst`        | `0x07` | Integer subtraction                           |
@@ -70,23 +69,13 @@ No operation instruction. Does not alter the CPU state.
 
 - ##### `load rdst, raddr` (`0x01`)
 
-Load from scratchpad memory.  
-Loads the 16-bit word at memory address `raddr` in scratchpad memory and stores it to `rdst`.
+Load from memory.  
+Loads the 16-bit word at memory address `raddr` in memory and stores it to `rdst`.
 
 - ##### `store rsrc, raddr` (`0x02`)
 
-Store to scratchpad memory.  
-Stores the `rsrc` register to the word at memory address `raddr` in scratchpad memory.
-
-- ##### `pload rsrc, raddr` (`0x03`)
-
-Load from program memory.  
-Loads the 16-bit word at memory address `raddr` in program memory and it to `rdst`.
-
-- ##### `pstore rdst, raddr` (`0x04`)
-
-Store to program memory.  
-Stores to the `rsrc` register to the word at memory address `raddr` in program memory.
+Store to memory.  
+Stores the `rsrc` register to the word at memory address `raddr` in memory.
 
 - ##### `mov rsrc, rdst` (`0x05`)
 
@@ -243,7 +232,7 @@ Stores the `ia` value to `rdst`.
 
 - ##### `hlt` (`0x21`)
 
-Halt the CPU and wait for an interrupt.
+Halt the CPU and wait for an interrupt.  
 If interrupts are globally disabled, the CPU will halt and catch fire.
 
 - ##### `read rdst, rport` (`0x22`)
@@ -255,7 +244,7 @@ When the port does not exist or when no data is available at the port, the lower
 - ##### `write rsrc, rport` (`0x23`)
 
 Non-blocking I/O port write.  
-Write the lower byte of `rdst` to the `rport` port.
+Write the lower byte of `rdst` to the `rport` port.  
 When the port does not exist or when the port cannot receive data at the moment, the `_IOFAIL` flag is set.
 
 - ##### `wait rport` (`0x24`)
@@ -265,6 +254,6 @@ Halt the CPU until there is data to read from `rport`.
 
 - ##### `int iid` (`0x25`)
 
-Throw a fake user interrupt with the 3 lower bits of `iid` as ID.
+Raise a user interrupt with the 3 lower bits of `iid` as ID.
 
 _See: Interrupts_
