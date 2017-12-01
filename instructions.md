@@ -9,14 +9,12 @@ Instructions
 
 Instructions have a fixed size of **32** bits (2 CPU words). However, the internal structure of the instruction may vary.  
 The opcode always appears in the first byte, but the other operands may not be used by instructions. In this case, the implementation will ignore these bits.  
-Some ranges may overlap, however, instructions will never use arguments in such a way their ranges could overlap.
 
 | Name                  | Range          |
 |-----------------------|----------------|
 | Opcode                | `0x00`->`0x07` |
 | Register operand `#1` | `0x08`->`0x0B` |
 | Register operand `#2` | `0x0C`->`0x0F` |
-| Register operand `#3` | `0x10`->`0x13` |
 | Immediate             | `0x10`->`0x1F` |
 
 
@@ -28,17 +26,17 @@ Some ranges may overlap, however, instructions will never use arguments in such 
 | `load`     | `rdst, raddr`         | `0x01` | Load from memory                              |
 | `store`    | `rsrc, raddr`         | `0x02` | Store to memory                               |
 | `mov`      | `rsrc, rdst`          | `0x05` | Copy register value                           |
-| `add`      | `ra, rb, rdst`        | `0x06` | Integer addition                              |
-| `sub`      | `ra, rb, rdst`        | `0x07` | Integer subtraction                           |
-| `mul`      | `ra, rb, rdst`        | `0x08` | Integer multiplication                        |
-| `div`      | `ra, rb, rdst`        | `0x09` | Integer division                              |
-| `and`      | `ra, rb, rdst`        | `0x0A` | Bitwise AND                                   |
-| `or`       | `ra, rb, rdst`        | `0x0B` | Bitwise OR                                    |
-| `xor`      | `ra, rb, rdst`        | `0x0C` | Bitwise XOR                                   |
-| `not`      | `ra, rdst`            | `0x0D` | Bitwise NOT                                   |
-| `shl`      | `ra, roff, rdst`      | `0x0E` | Bitwise left shift                            |
-| `shr`      | `ra, roff, rdst`      | `0x0F` | Bitwise right shift                           |
-| `gbit`     | `ra, roff, rdst`      | `0x11` | Copy bit at offset to LSB                     |
+| `add`      | `ra, rb`              | `0x06` | Integer addition                              |
+| `sub`      | `ra, rb`              | `0x07` | Integer subtraction                           |
+| `mul`      | `ra, rb`              | `0x08` | Integer multiplication                        |
+| `div`      | `ra, rb`              | `0x09` | Integer division                              |
+| `and`      | `ra, rb`              | `0x0A` | Bitwise AND                                   |
+| `or`       | `ra, rb`              | `0x0B` | Bitwise OR                                    |
+| `xor`      | `ra, rb`              | `0x0C` | Bitwise XOR                                   |
+| `not`      | `ra`                  | `0x0D` | Bitwise NOT                                   |
+| `shl`      | `ra, roff`            | `0x0E` | Bitwise left shift                            |
+| `shr`      | `ra, roff`            | `0x0F` | Bitwise right shift                           |
+| `gbit`     | `ra, roff`            | `0x11` | Copy bit at offset to LSB                     |
 | `fbit`     | `ra, roff`            | `0x12` | Flip bit at offset                            |
 | `pop`      | `rdst`                | `0x13` | Pop stack value to register                   |
 | `push`     | `rsrc`                | `0x14` | Push register value to stack                  |
@@ -65,81 +63,80 @@ No operation instruction. Does not alter the CPU state.
 
 - ##### `load rdst, raddr` (`0x01`)
 
-Load from memory.  
 Loads the 16-bit word at memory address `raddr` in memory and stores it to `rdst`.
 
 - ##### `store rsrc, raddr` (`0x02`)
 
-Store to memory.  
 Stores the `rsrc` register to the word at memory address `raddr` in memory.
 
 - ##### `mov rsrc, rdst` (`0x05`)
 
-Copy the register `rsrc` content to `rdst`.
+Copy the register value `rsrc` to `rdst`.
 
-- ##### `add ra, rb, rdst` (`0x06`)
+- ##### `add ra, rb` (`0x06`)
 
 Integer addition.  
-Perform `ra + rb` and store to `rdst`.
+Perform `ra + rb` and store to `racc`.
 
-- ##### `sub ra, rb, rdst` (`0x07`)
+- ##### `sub ra, rb` (`0x07`)
 
 Integer subtraction.  
-Perform `ra - rb` and store to `rdst`.
+Perform `ra - rb` and store to `racc`.
 
-- ##### `mul ra, rb, rdst` (`0x08`)
+- ##### `mul ra, rb` (`0x08`)
 
 Integer multiplication.  
-Perform `ra * rb` and store to `rdst`.
+Perform `ra * rb` and store to `racc`.
 
-- ##### `div ra, rb, rdst` (`0x09`)
+- ##### `div ra, rb` (`0x09`)
 
 Integer division.  
-Perform `ra / rb` and store to `rdst`.  
+Perform `ra / rb` and store to `racc`.  
 If `rb` is zero, a `_ARITHMETIC` CPU exception will rise.
 
-- ##### `and ra, rb, rdst` (`0x0A`)
+- ##### `and ra, rb` (`0x0A`)
 
 Bitwise AND.  
-Perform `ra & rb, rdst` and store to `rdst`.
+Perform `ra & rb` and store to `racc`.
 
 - ##### `or ra, rb` (`0x0B`)
 
 Bitwise OR.  
-Perform `ra | rb` and store to `rdst`.
+Perform `ra | rb` and store to `racc`.
 
-- ##### `xor ra, rb, rdst` (`0x0C`)
+- ##### `xor ra, rb` (`0x0C`)
 
 Bitwise exclusive OR (XOR).  
-Perform `ra ^ rb` and store to `rdst`.  
-Using `xor ra, ra` will effectively clear the register.
+Perform `ra ^ rb` and store to `racc`.  
+Using `xor ra, ra` can be used for clearing the register.
 
 - ##### `not ra, rdst` (`0x0D`)
 
 Bitwise NOT.  
-Perform `~ra` and store to `rdst`.
+Perform `~ra` and store to `racc`.
 
-- ##### `shl ra, roff, rdst` (`0x0E`)
-
-Bitwise bitshift left.  
-Perform `ra << roff` and store to `rdst`.  
-The bits appearing on the right are `0`.
-
-- ##### `shr ra, roff, rdst` (`0x0F`)
+- ##### `shl ra, roff` (`0x0E`)
 
 Bitwise bitshift left.  
-Perform `ra << roff` and store to `rdst`.  
-The bits appearing on the left are `0`.
+Perform `ra << roff` and store to `racc`.  
+`0` is used for padding.
 
-- ##### `gbit ra, roff, rdst` (`0x11`)
+- ##### `shr ra, roff` (`0x0F`)
+
+Bitwise bitshift right.  
+Perform `ra >> roff` and store to `rdst`.  
+`0` is used for padding.
+
+- ##### `gbit ra, roff` (`0x11`)
 
 Get bit at offset.  
-The bit of `ra` at offset `roff` is copied to the LSB of `rdst`.
+The bit of `ra` at offset `roff` is copied to the LSB of `racc`.
 
 - ##### `fbit ra, roff` (`0x12`)
 
 Flip bit at offset.  
-The bit of `ra` at offset `roff` is flipped (`0`->`1` and `1`->`0`)
+The bit of `ra` at offset `roff` is flipped (`0`->`1` and `1`->`0`).  
+The result is stored to `ra`.
 
 - ##### `pop rdst` (`0x13`)
 
@@ -228,6 +225,7 @@ If interrupts are globally disabled, the CPU will halt and catch fire.
 
 - ##### `int iid` (`0x25`)
 
-Raise a user interrupt with the 3 lower bits of `iid` as ID.
+Raise a user interrupt with the 3 lower bits of `iid` as ID.  
+Other bits are ignored by the CPU.
 
 _See: Interrupts_

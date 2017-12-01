@@ -32,9 +32,9 @@ Comments are pieces of text that are ignored by the assembler and not parsed in 
 
     # this is a comment
     # this is another comment
-    mov racc, r0 # explain something complicated
-    mov racc, r1
-    # mov racc, r2 - commented instructions are ignored
+    mov racc, r4 # explain something complicated
+    mov racc, r5
+    # mov racc, r6 - commented instructions are ignored
 
 #### Assembler directives
 
@@ -53,8 +53,8 @@ Forces the assembler location counter.
 In other words, the next instruction (or assembler directive) will be located at the given offset in the resulting flat binary.
 
     .at 0x1000
-    mov racc, r0
-    mov racc, r1
+    mov racc, r4
+    mov racc, r5
 
 This piece of code will have the `mov racc, r0` instruction located at `0x1000` in the flat binary. Do remember that the memory word is 16-bit in ntl, so the actual byte offset would be `0x2000`.  
 The instruction that follows naturally is located at `0x1002`.
@@ -80,15 +80,15 @@ Example:
 `b.nts` file:
 
 	.label someFunction
-		add rg0, rg1
+		add r4, r5
 		ret
 
 `a.nts` file:
 
 	.include "b.nts"
 	.label main
-		ldi rg0, 8
-		ldi rg1, 2
+		ldi r4, 8
+		ldi r5, 2
 		calli someFunction
 
 - ##### `.label`
