@@ -196,22 +196,26 @@ _See: Functions_
 - ##### `tz ra`
 
 Test for equality to zero.  
-Sets the `_TEST` flag if `ra == 0`.
+Sets the `_TEST` flag if `ra == 0`.  
+When the condition is not met, the `_TEST` flag *will be left untouched*.
 
 - ##### `tht ra, rb`
 
 Test for higher than.  
-Sets the `_TEST` flag if `ra > rb`.
+Sets the `_TEST` flag if `ra > rb`.  
+When the condition is not met, the `_TEST` flag *will be left untouched*.
 
 - ##### `thq ra, rb`
 
 Test for higher or equal to.  
-Sets the `_TEST` flag if `ra >= rb`.
+Sets the `_TEST` flag if `ra >= rb`.  
+When the condition is not met, the `_TEST` flag *will be left untouched*.
 
 - ##### `teq ra, rb`
 
 Test for equality.  
-Sets the `_TEST` flag if `ra == rb`.
+Sets the `_TEST` flag if `ra == rb`.  
+When the condition is not met, the `_TEST` flag *will be left untouched*.
 
 - ##### `ldi rdst, ia`
 
