@@ -19,6 +19,10 @@ It is a __von Neumann__ architecture, so the data and program memory are the sam
 | `ridt` | `0x1` | IDT address           |
 | `racc` | `0x2` | Accumulator           |
 | `rsp`  | `0x3` | Stack pointer         |
+| `r4`   | `0x4` | General purpose #4    |
+| `r5`   | `0x5` | General purpose #5    |
+| `r6`   | `0x6` | General purpose #6    |
+| `r7`   | `0x7` | General purpose #7    |
 
 ### Flag register
 
