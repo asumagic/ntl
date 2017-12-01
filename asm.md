@@ -66,7 +66,7 @@ Inline an immediate value within the program binary. Extra bits will be filled w
 	.data 8 0xDEADBEEF
 	.data 11 "hello world"
 
-This example will hold, in program memory:
+This example will result in:
 
 	BEEF DEAD 0000 0000 6865 6C6C 6F20 776F 726C 0064
 

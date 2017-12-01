@@ -38,7 +38,6 @@ Some ranges may overlap, however, instructions will never use arguments in such 
 | `not`      | `ra, rdst`            | `0x0D` | Bitwise NOT                                   |
 | `shl`      | `ra, roff, rdst`      | `0x0E` | Bitwise left shift                            |
 | `shr`      | `ra, roff, rdst`      | `0x0F` | Bitwise right shift                           |
-| `ashr`     | `ra, roff, rdst`      | `0x10` | Arithmetic right shift                        |
 | `gbit`     | `ra, roff, rdst`      | `0x11` | Copy bit at offset to LSB                     |
 | `fbit`     | `ra, roff`            | `0x12` | Flip bit at offset                            |
 | `pop`      | `rdst`                | `0x13` | Pop stack value to register                   |
@@ -55,10 +54,7 @@ Some ranges may overlap, however, instructions will never use arguments in such 
 | `thq`      | `ra, rb`              | `0x1E` | Test for higher than or equal to              |
 | `teq`      | `ra, rb`              | `0x1F` | Test for equal to                             |
 | `ldi`      | `rdst, ia`            | `0x20` | Load immediate value to register              |
-| `hlt`      |                       | `0x21` | Halt CPU (wait for interrupt wakeup)          |
-| `read`     | `rdst, rport`         | `0x22` | Read from I/O device                          |
-| `write`    | `rsrc, rport`         | `0x23` | Write to I/O device                           |
-| `wait`     | `rport`               | `0x24` | Wait for I/O device data                      |
+| `hlt`      |                       | `0x21` | Halt CPU until interrupt                      |
 | `int`      | `iid`                 | `0x25` | Raise interrupt                               |
 
 #### Opcode detailed information
@@ -134,11 +130,6 @@ The bits appearing on the right are `0`.
 Bitwise bitshift left.  
 Perform `ra << roff` and store to `rdst`.  
 The bits appearing on the left are `0`.
-
-- ##### `ashr ra, roff, rdst` (`0x10`)
-
-Arithmetic bitshift right.  
-It behaves similarly to a bitwise bitshift right, but the MSB is copied over the `rdst` destination.
 
 - ##### `gbit ra, roff, rdst` (`0x11`)
 
@@ -234,23 +225,6 @@ Stores the `ia` value to `rdst`.
 
 Halt the CPU and wait for an interrupt.  
 If interrupts are globally disabled, the CPU will halt and catch fire.
-
-- ##### `read rdst, rport` (`0x22`)
-
-Non-blocking I/O port read.  
-Read a byte from `rport` and write it to the lower byte of `rdst`.  
-When the port does not exist or when no data is available at the port, the lower byte of `rdst` is not modified and the `_IOFAIL` flag is set.
-
-- ##### `write rsrc, rport` (`0x23`)
-
-Non-blocking I/O port write.  
-Write the lower byte of `rdst` to the `rport` port.  
-When the port does not exist or when the port cannot receive data at the moment, the `_IOFAIL` flag is set.
-
-- ##### `wait rport` (`0x24`)
-
-I/O port wait.  
-Halt the CPU until there is data to read from `rport`.
 
 - ##### `int iid` (`0x25`)
 

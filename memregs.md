@@ -37,5 +37,4 @@ The `fl` register is the flag register, which stores some useful flags.
 | `_INT6ON`  | `0x6`  | Interrupt #6 enabled               |
 | `_INT7ON`  | `0x7`  | Interrupt #7 enabled               |
 | `_TEST`    | `0x8`  | Test was positive                  |
-| `_IOFAIL`  | `0x9`  | Faileded I/O transaction           |
 | `_INTLOCK` | `0xA`  | Interrupt lock                     |

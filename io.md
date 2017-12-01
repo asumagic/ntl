@@ -7,18 +7,20 @@ I/O and interrupts
 
 #### Interrupts
 
-The base ntl CPU can be woken up by __8__ interrupts. An interrupt stops the regular operation of the CPU and is triggered by an internal or external signal. They can be enabled or disabled globally through the `_INTON` flag and individually enabled through the `_INTxON` flags.
+The CPU can be woken up by __8__ interrupts. An interrupt stops the operation of the CPU and can be triggered either by the user, either by a peripherial.  
+They can be enabled globally through the `_INTON` flag and enabled individually through the `_INTxON` flags.
 
 The `ridt` register is the offset to the Interrupt Descriptor Table. The IDT is a table with 8 entries of 16 bits. Each entry is an offset matching to an Interrupt Service Routine.
 
-An ISR is a routine called when a matching interrupt is called. The return address matches to the instruction that should have been executed when being interrupted. However, there are things that the application programmer needs to be aware of:
+ISRs are routines called when an interrupt is called.  
+The return address matches to the instruction that should have been executed when being interrupted. However, there are things that the application programmer needs to be aware of:
 - An ISR is a regular, non-returning function.
-- Interrupts from ID `1` to `7` does not push any parameter data through the stack.
+- Interrupts from ID `1` to `7` do not push any parameter data through the stack.
 - Interrupt `0` is special and has extra things to take care of. _See: CPU exceptions_
-- The interrupts does not affect registers. They should be saved and restored by the ISR to resume the task that was interrupted.
+- Interrupts do not affect registers. They should be saved and restored by the ISR in order to resume the task that was interrupted.
 - When an interrupt rises, the `_INTLOCK` flag is set. It should be disabled by the ISR properly, because it temporarily disables interrupts.
 - When interrupts are disabled (when `_INTON` and `_INT*ON` are not set), those interrupts are rejected and will never interrupt the CPU, even when reenabling interrupts.
-- When interrupts are enabled, but `_INTLOCK` is set, the interrupts will stack in a dedicated interrupt stack. This stack has a limited size, so pushing an interrupt to the interrupt stack will effectively reject the interrupt.
+- When interrupts are enabled, but `_INTLOCK` is set, the interrupts will stack in a dedicated interrupt stack. This stack has a limited size, defined by the implementation, so pushing an interrupt to the interrupt stack will effectively reject the interrupt.
 
 ##### CPU exceptions (Interrupt `0`)
 
@@ -30,8 +32,16 @@ A CPU exception is a special interrupt that cannot be disabled. Unlike other int
 | `_ILLOP`      | `0x0001` | Illegal operation         |
 | `_UNIMPL`     | `0x0002` | Incomplete implementation |
 
-#### Port I/O
+#### Memory Mapped I/O
 
-The base ntl CPU has access to __65'536__ ports. Ports can be used to send and receive 8 bits (half a register) a clock, and can be used to communicate with external, non-standard peripherials.
+In order to interact with peripherials, ntl implementations may implement Memory Mapped I/O.  
+MMIO uses the same address space as memory. However, MMIO regions can be listened to by peripherials.
 
-Port I/O is performed through the `read` and `write` instructions. Those operations are non-blocking so a transaction failing at a given clock time will result into the `_IOFAIL` flag being set.
+32KiB of the memory address space is reserved for MMIO, within the `0xC000-0xFFFF` range.  
+_Within the MMIO reserved region_, the following behavior is defined by the implementation:
+- Whether the memory read and write operations are performed through physical memory.
+- Whether read and write operations are slower than regular I/O.
+
+##### Reference implementation behavior
+
+The implementation defined behavior depends on peripherials.
