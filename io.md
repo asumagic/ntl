@@ -38,10 +38,8 @@ In order to interact with peripherials, ntl implementations may implement Memory
 MMIO uses the same address space as memory. However, MMIO regions can be listened to by peripherials.
 
 32KiB of the memory address space is reserved for MMIO, within the `0xC000-0xFFFF` range.  
-_Within the MMIO reserved region_, the following behavior is defined by the implementation:
-- Whether the memory read and write operations are performed through physical memory.
-- Whether read and write operations are slower than regular I/O.
+_Within the MMIO reserved region_, memory read operations are implementation-defined behavior.
 
 ##### Reference implementation behavior
 
-The implementation defined behavior depends on peripherials.
+The implementation-defined behavior depends on peripherials.
