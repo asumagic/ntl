@@ -1,8 +1,11 @@
 # **nanoThallium** (ntl) - RISC ISA
 
-nanoThallium or ntl for short is a reduced instruction set computing architecture __(RISC)__. Its goal is to have simple encoding and permit simple interpretation and implementation.  
+nanoThallium or ntl for short is a reduced instruction set computing architecture __(RISC)__.  
+It is a simple architecture I'm building for fun. It's meant to be simple to implement in hardware or software.
 
-There are multiple projects related to this main repository, that also indexes documentation:
+A FPGA-based implementation is planned.
+
+There are multiple projects related to this main repository:
 - [`ntl-asm`](https://github.com/AsuMagic/ntl-asm): The reference assembler
 - [`ntl-emu`](https://github.com/AsuMagic/ntl-emu): The reference emulator
 - [`ntl-samples`](https://github.com/AsuMagic/ntl-samples): Code samples

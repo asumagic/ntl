@@ -21,48 +21,46 @@ Some areas like the register operand `#3` range overlaps the immediate range, in
 
 #### Opcode cheatsheet
 
-| Mnemonic   | Arguments             | ID     | Description                                   | Timing* |
-|------------|-----------------------|--------|-----------------------------------------------|---------|
-| `nop`      |                       | `0x00` | __NO__ o__P__eration                          | `1`     |
-| `load`     | `rdst, raddr`         | `0x01` | __LOAD__ from memory                          | `2`     |
-| `store`    | `rsrc, raddr`         | `0x02` | __STORE__ to memory                           | `2`     |
-| `pload`    | `rdst, raddr`         | `0x03` | __LOAD__ from __P__rogram memory              | `2`     |
-| `pstore`   | `rsrc, raddr`         | `0x04` | __STORE__ to __P__rogram memory               | `2`     |
-| `mov`      | `rsrc, rdst`          | `0x05` | __MOV__e register                             | `1`     |
-| `add`      | `ra, rb, rdst`        | `0x06` | __ADD__                                       | `1`     |
-| `sub`      | `ra, rb, rdst`        | `0x07` | __SUB__tract                                  | `1`     |
-| `mul`      | `ra, rb, rdst`        | `0x08` | __MUL__tiply                                  | TBD     |
-| `div`      | `ra, rb, rdst`        | `0x09` | __DIV__ide                                    | TBD     |
-| `and`      | `ra, rb, rdst`        | `0x0A` | Bitwise __AND__                               | `1`     |
-| `or`       | `ra, rb, rdst`        | `0x0B` | Bitwise __OR__                                | `1`     |
-| `xor`      | `ra, rb, rdst`        | `0x0C` | Bitwise __XOR__                               | `1`     |
-| `not`      | `ra, rdst`            | `0x0D` | Bitwise __NOT__                               | `1`     |
-| `shl`      | `ra, roff, rdst`      | `0x0E` | Bitwise __SH__ift __L__eft                    | `1`     |
-| `shr`      | `ra, roff, rdst`      | `0x0F` | Bitwise __SH__ift __R__ight                   | `1`     |
-| `ashr`     | `ra, roff, rdst`      | `0x10` | __A__rithmetic __SH__ift __R__ight            | `1`     |
-| `gbit`     | `ra, roff, rdst`      | `0x11` | __G__et __BIT__ at offset to LSD              | `1`     |
-| `fbit`     | `ra, roff`            | `0x12` | __F__lip __BIT__ at offset                    | `1`     |
-| `pop`      | `rdst`                | `0x13` | __POP__ register from stack                   | `2`     |
-| `push`     | `rsrc`                | `0x14` | __PUSH__ register to stack                    | `2`     |
-| `jmpi`     | `iaddr`               | `0x15` | __J__u__MP__ to __I__mmediate                 | `2`     |
-| `jmp`      | `raddr`               | `0x16` | __J__u__MP__                                  | `2`     |
-| `cjmpi`    | `iaddr`               | `0x17` | __C__onditional __J__u__MP__ to __I__mmediate | `2`     |
-| `cjmp`     | `raddr`               | `0x18` | __C__onditional __J__u__MP__                  | `2`     |
-| `ret`      |                       | `0x19` | __RET__urn                                    | `2`     |
-| `calli`    | `iaddr`               | `0x1A` | __CALL I__mmediate function                   | TBD     |
-| `call`     | `raddr`               | `0x1B` | __CALL__ function                             | TBD     |
-| `tz`       | `ra`                  | `0x1C` | __T__est: equal to __Z__ero                   | `1`     |
-| `tht`      | `ra, rb`              | `0x1D` | __T__est: __H__igher __T__han                 | `1`     |
-| `thq`      | `ra, rb`              | `0x1E` | __T__est: __H__igher or e__Q__ual to          | `1`     |
-| `teq`      | `ra, rb`              | `0x1F` | __T__est: __EQ__ual to                        | `1`     |
-| `ldi`      | `rdst, ia`            | `0x20` | __L__oa__D__ __I__mmediate                    | `1`     |
-| `hlt`      |                       | `0x21` | __H__a__LT__ CPU                              | `1`     |
-| `read`     | `rdst, rport`         | `0x22` | I/O __READ__                                  | `2`     |
-| `write`    | `rsrc, rport`         | `0x23` | I/O __WRITE__                                 | `1`     |
-| `wait`     | `rport`               | `0x24` | I/O port __WAIT__                             | `1`     |
-| `int`      | `iid`                 | `0x25` | Throw fake __INT__errupt                      | TBD     |
-
-\* Specified timings are the reference timing for the base VHDL implementation of ntl.  
+| Mnemonic   | Arguments             | ID     | Description                                   |
+|------------|-----------------------|--------|-----------------------------------------------|
+| `nop`      |                       | `0x00` | No operation                                  |
+| `load`     | `rdst, raddr`         | `0x01` | Load from scratchpad memory                   |
+| `store`    | `rsrc, raddr`         | `0x02` | Store to scratchpad memory                    |
+| `pload`    | `rdst, raddr`         | `0x03` | Load from program memory                      |
+| `pstore`   | `rsrc, raddr`         | `0x04` | Store to program memory                       |
+| `mov`      | `rsrc, rdst`          | `0x05` | Copy register value                           |
+| `add`      | `ra, rb, rdst`        | `0x06` | Integer addition                              |
+| `sub`      | `ra, rb, rdst`        | `0x07` | Integer subtraction                           |
+| `mul`      | `ra, rb, rdst`        | `0x08` | Integer multiplication                        |
+| `div`      | `ra, rb, rdst`        | `0x09` | Integer division                              |
+| `and`      | `ra, rb, rdst`        | `0x0A` | Bitwise AND                                   |
+| `or`       | `ra, rb, rdst`        | `0x0B` | Bitwise OR                                    |
+| `xor`      | `ra, rb, rdst`        | `0x0C` | Bitwise XOR                                   |
+| `not`      | `ra, rdst`            | `0x0D` | Bitwise NOT                                   |
+| `shl`      | `ra, roff, rdst`      | `0x0E` | Bitwise left shift                            |
+| `shr`      | `ra, roff, rdst`      | `0x0F` | Bitwise right shift                           |
+| `ashr`     | `ra, roff, rdst`      | `0x10` | Arithmetic right shift                        |
+| `gbit`     | `ra, roff, rdst`      | `0x11` | Copy bit at offset to LSB                     |
+| `fbit`     | `ra, roff`            | `0x12` | Flip bit at offset                            |
+| `pop`      | `rdst`                | `0x13` | Pop stack value to register                   |
+| `push`     | `rsrc`                | `0x14` | Push register value to stack                  |
+| `jmpi`     | `iaddr`               | `0x15` | Jump to immediate address                     |
+| `jmp`      | `raddr`               | `0x16` | Jump to register value address                |
+| `cjmpi`    | `iaddr`               | `0x17` | Conditional jump to immediate address         |
+| `cjmp`     | `raddr`               | `0x18` | Conditional jump to register value address    |
+| `ret`      |                       | `0x19` | Return from function                          |
+| `calli`    | `iaddr`               | `0x1A` | Call to immediate address function            |
+| `call`     | `raddr`               | `0x1B` | Call to register value address function       |
+| `tz`       | `ra`                  | `0x1C` | Test equality to zero                         |
+| `tht`      | `ra, rb`              | `0x1D` | Test for higher than                          |
+| `thq`      | `ra, rb`              | `0x1E` | Test for higher than or equal to              |
+| `teq`      | `ra, rb`              | `0x1F` | Test for equal to                             |
+| `ldi`      | `rdst, ia`            | `0x20` | Load immediate value to register              |
+| `hlt`      |                       | `0x21` | Halt CPU (wait for interrupt wakeup)          |
+| `read`     | `rdst, rport`         | `0x22` | Read from I/O device                          |
+| `write`    | `rsrc, rport`         | `0x23` | Write to I/O device                           |
+| `wait`     | `rport`               | `0x24` | Wait for I/O device data                      |
+| `int`      | `iid`                 | `0x25` | Raise interrupt                               |
 
 #### Opcode detailed information
 
