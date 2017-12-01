@@ -25,205 +25,205 @@ The opcode always appears in the first byte, but the other operands may not be u
 | `nop`      |                       | `0x00` | No operation                                  |
 | `load`     | `rdst, raddr`         | `0x01` | Load from memory                              |
 | `store`    | `rsrc, raddr`         | `0x02` | Store to memory                               |
-| `mov`      | `rsrc, rdst`          | `0x05` | Copy register value                           |
-| `add`      | `ra, rb`              | `0x06` | Integer addition                              |
-| `sub`      | `ra, rb`              | `0x07` | Integer subtraction                           |
-| `mul`      | `ra, rb`              | `0x08` | Integer multiplication                        |
-| `div`      | `ra, rb`              | `0x09` | Integer division                              |
-| `and`      | `ra, rb`              | `0x0A` | Bitwise AND                                   |
-| `or`       | `ra, rb`              | `0x0B` | Bitwise OR                                    |
-| `xor`      | `ra, rb`              | `0x0C` | Bitwise XOR                                   |
-| `not`      | `ra`                  | `0x0D` | Bitwise NOT                                   |
-| `shl`      | `ra, roff`            | `0x0E` | Bitwise left shift                            |
-| `shr`      | `ra, roff`            | `0x0F` | Bitwise right shift                           |
-| `gbit`     | `ra, roff`            | `0x11` | Copy bit at offset to LSB                     |
-| `fbit`     | `ra, roff`            | `0x12` | Flip bit at offset                            |
-| `pop`      | `rdst`                | `0x13` | Pop stack value to register                   |
-| `push`     | `rsrc`                | `0x14` | Push register value to stack                  |
-| `jmpi`     | `iaddr`               | `0x15` | Jump to immediate address                     |
-| `jmp`      | `raddr`               | `0x16` | Jump to register value address                |
-| `cjmpi`    | `iaddr`               | `0x17` | Conditional jump to immediate address         |
-| `cjmp`     | `raddr`               | `0x18` | Conditional jump to register value address    |
-| `ret`      |                       | `0x19` | Return from function                          |
-| `calli`    | `iaddr`               | `0x1A` | Call to immediate address function            |
-| `call`     | `raddr`               | `0x1B` | Call to register value address function       |
-| `tz`       | `ra`                  | `0x1C` | Test equality to zero                         |
-| `tht`      | `ra, rb`              | `0x1D` | Test for higher than                          |
-| `thq`      | `ra, rb`              | `0x1E` | Test for higher than or equal to              |
-| `teq`      | `ra, rb`              | `0x1F` | Test for equal to                             |
-| `ldi`      | `rdst, ia`            | `0x20` | Load immediate value to register              |
-| `hlt`      |                       | `0x21` | Halt CPU until interrupt                      |
-| `int`      | `iid`                 | `0x25` | Raise interrupt                               |
+| `mov`      | `rsrc, rdst`          | `0x03` | Copy register value                           |
+| `add`      | `ra, rb`              | `0x04` | Integer addition                              |
+| `sub`      | `ra, rb`              | `0x05` | Integer subtraction                           |
+| `mul`      | `ra, rb`              | `0x06` | Integer multiplication                        |
+| `div`      | `ra, rb`              | `0x07` | Integer division                              |
+| `and`      | `ra, rb`              | `0x08` | Bitwise AND                                   |
+| `or`       | `ra, rb`              | `0x09` | Bitwise OR                                    |
+| `xor`      | `ra, rb`              | `0x0A` | Bitwise XOR                                   |
+| `not`      | `ra`                  | `0x0B` | Bitwise NOT                                   |
+| `shl`      | `ra, roff`            | `0x0C` | Bitwise left shift                            |
+| `shr`      | `ra, roff`            | `0x0D` | Bitwise right shift                           |
+| `gbit`     | `ra, roff`            | `0x0E` | Copy bit at offset to LSB                     |
+| `fbit`     | `ra, roff`            | `0x0F` | Flip bit at offset                            |
+| `pop`      | `rdst`                | `0x10` | Pop stack value to register                   |
+| `push`     | `rsrc`                | `0x11` | Push register value to stack                  |
+| `jmpi`     | `iaddr`               | `0x12` | Jump to immediate address                     |
+| `jmp`      | `raddr`               | `0x13` | Jump to register value address                |
+| `cjmpi`    | `iaddr`               | `0x14` | Conditional jump to immediate address         |
+| `cjmp`     | `raddr`               | `0x15` | Conditional jump to register value address    |
+| `ret`      |                       | `0x16` | Return from function                          |
+| `calli`    | `iaddr`               | `0x17` | Call to immediate address function            |
+| `call`     | `raddr`               | `0x18` | Call to register value address function       |
+| `tz`       | `ra`                  | `0x19` | Test equality to zero                         |
+| `tht`      | `ra, rb`              | `0x1A` | Test for higher than                          |
+| `thq`      | `ra, rb`              | `0x1B` | Test for higher than or equal to              |
+| `teq`      | `ra, rb`              | `0x1C` | Test for equal to                             |
+| `ldi`      | `rdst, ia`            | `0x1D` | Load immediate value to register              |
+| `hlt`      |                       | `0x1E` | Halt CPU until interrupt                      |
+| `int`      | `iid`                 | `0x1F` | Raise interrupt                               |
 
 #### Opcode detailed information
 
-- ##### `nop` (`0x00`)
+- ##### `nop`
 
 No operation instruction. Does not alter the CPU state.
 
-- ##### `load rdst, raddr` (`0x01`)
+- ##### `load rdst, raddr`
 
 Loads the 16-bit word at memory address `raddr` in memory and stores it to `rdst`.
 
-- ##### `store rsrc, raddr` (`0x02`)
+- ##### `store rsrc, raddr`
 
 Stores the `rsrc` register to the word at memory address `raddr` in memory.
 
-- ##### `mov rsrc, rdst` (`0x05`)
+- ##### `mov rsrc, rdst`
 
 Copy the register value `rsrc` to `rdst`.
 
-- ##### `add ra, rb` (`0x06`)
+- ##### `add ra, rb`
 
 Integer addition.  
 Perform `ra + rb` and store to `racc`.
 
-- ##### `sub ra, rb` (`0x07`)
+- ##### `sub ra, rb`
 
 Integer subtraction.  
 Perform `ra - rb` and store to `racc`.
 
-- ##### `mul ra, rb` (`0x08`)
+- ##### `mul ra, rb`
 
 Integer multiplication.  
 Perform `ra * rb` and store to `racc`.
 
-- ##### `div ra, rb` (`0x09`)
+- ##### `div ra, rb`
 
 Integer division.  
 Perform `ra / rb` and store to `racc`.  
 If `rb` is zero, a `_ARITHMETIC` CPU exception will rise.
 
-- ##### `and ra, rb` (`0x0A`)
+- ##### `and ra, rb`
 
 Bitwise AND.  
 Perform `ra & rb` and store to `racc`.
 
-- ##### `or ra, rb` (`0x0B`)
+- ##### `or ra, rb`
 
 Bitwise OR.  
 Perform `ra | rb` and store to `racc`.
 
-- ##### `xor ra, rb` (`0x0C`)
+- ##### `xor ra, rb`
 
 Bitwise exclusive OR (XOR).  
 Perform `ra ^ rb` and store to `racc`.  
 Using `xor ra, ra` can be used for clearing the register.
 
-- ##### `not ra, rdst` (`0x0D`)
+- ##### `not ra, rdst`
 
 Bitwise NOT.  
 Perform `~ra` and store to `racc`.
 
-- ##### `shl ra, roff` (`0x0E`)
+- ##### `shl ra, roff`
 
 Bitwise bitshift left.  
 Perform `ra << roff` and store to `racc`.  
 `0` is used for padding.
 
-- ##### `shr ra, roff` (`0x0F`)
+- ##### `shr ra, roff`
 
 Bitwise bitshift right.  
 Perform `ra >> roff` and store to `rdst`.  
 `0` is used for padding.
 
-- ##### `gbit ra, roff` (`0x11`)
+- ##### `gbit ra, roff`
 
 Get bit at offset.  
 The bit of `ra` at offset `roff` is copied to the LSB of `racc`.
 
-- ##### `fbit ra, roff` (`0x12`)
+- ##### `fbit ra, roff`
 
 Flip bit at offset.  
 The bit of `ra` at offset `roff` is flipped (`0`->`1` and `1`->`0`).  
 The result is stored to `ra`.
 
-- ##### `pop rdst` (`0x13`)
+- ##### `pop rdst`
 
 Pop stack value to register.  
 `load` word at address `rsp` from scratchpad memory to `rdst` and decrement `rsp`.
 
-- ##### `push rsrc` (`0x14`)
+- ##### `push rsrc`
 
 Push register to stack.  
 Increment `rsp` and `store` the `rsrc` register to the new `rsp` memory address.
 
-- ##### `jmpi iaddr` (`0x15`)
+- ##### `jmpi iaddr`
 
 Jump to immediate address.  
 Sets the read-only `ip` register to `iaddr`, which is the address to the next instruction executed.
 
-- ##### `jmp raddr` (`0x16`)
+- ##### `jmp raddr`
 
 Jump to register-defined address.  
 Sets the read-only `ip` register to `raddr`, which is the address to the next instruction executed.
 
-- ##### `cjmpi iaddr` (`0x17`)
+- ##### `cjmpi iaddr`
 
 Conditional jump to immediate address.  
 If the `_TEST` flag is set, the jump will be performed, and the `_TEST` flag will be cleared.
 
 _See: `jmpi`_
 
-- ##### `cjmp raddr` (`0x18`)
+- ##### `cjmp raddr`
 
 Conditional jump to register-defined address.  
 If the `_TEST` flag is set, the jump will be performed, and the `_TEST` flag will be cleared.
 
 _See: `jmp`_
 
-- ##### `ret` (`0x19`)
+- ##### `ret`
 
 Return from function.  
 Pop stack value to `ip` and increment it, so it becomes the next instruction to execute.
 
 _See: Functions_
 
-- ##### `calli iaddr` (`0x1A`)
+- ##### `calli iaddr`
 
 Call function at immediate address.  
 Push `ip` to the stack and `jmpi iaddr`.
 
 _See: Functions_
 
-- ##### `call raddr` (`0x1B`)
+- ##### `call raddr`
 
 Call function at register-defined address.  
 Push `ip` to the stack and `jmpi iaddr`.
 
 _See: Functions_
 
-- ##### `tz ra` (`0x1C`)
+- ##### `tz ra`
 
 Test for equality to zero.  
 Sets the `_TEST` flag if `ra == 0`.
 
-- ##### `tht ra, rb` (`0x1D`)
+- ##### `tht ra, rb`
 
 Test for higher than.  
 Sets the `_TEST` flag if `ra > rb`.
 
-- ##### `thq ra, rb` (`0x1E`)
+- ##### `thq ra, rb`
 
 Test for higher or equal to.  
 Sets the `_TEST` flag if `ra >= rb`.
 
-- ##### `teq ra, rb` (`0x1F`)
+- ##### `teq ra, rb`
 
 Test for equality.  
 Sets the `_TEST` flag if `ra == rb`.
 
-- ##### `ldi rdst, ia` (`0x20`)
+- ##### `ldi rdst, ia`
 
 Load immediate value.  
 Stores the `ia` value to `rdst`.
 
-- ##### `hlt` (`0x21`)
+- ##### `hlt`
 
 Halt the CPU and wait for an interrupt.  
 If interrupts are globally disabled, the CPU will halt and catch fire.
 
-- ##### `int iid` (`0x25`)
+- ##### `int iid`
 
 Raise a user interrupt with the 3 lower bits of `iid` as ID.  
 Other bits are ignored by the CPU.
