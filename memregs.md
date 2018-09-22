@@ -17,7 +17,7 @@ When the machine is initialized, registers are in an uninitialized state, with t
 The main memory hosts the program and data within the same address space and can be manipulated through specialized instructions only.  
 See [Instructions](instructions.md)
 
-### Register cheatsheet
+## Register cheatsheet
 
 | Name   | ID    | Description                               |
 |--------|-------|-------------------------------------------|
@@ -33,7 +33,7 @@ See [Instructions](instructions.md)
 
 Register `0x6` is reserved for future uses.
 
-#### `rfl`
+### `rfl`
 
 The flag register stores flags which are readable and writable by the program.  
 It is read by the CPU (e.g. to control interrupts) and can be written to for certain flags (e.g. `_INTLOCK`).
@@ -52,28 +52,28 @@ Flags at offsets `6` through `15` are reserved for future uses.
 \*: Binary offset from the LSB, e.g. you can read `_INTLOCK` with `(rfl >> 5) & 0x1`.  
 \*\*: See [IO and interrupts](io.md)
 
-#### `ridt`
+### `ridt`
 
 The IDT address refers to a table of interrupt handlers.  
 See [IO and interrupts](io.md)
 
-#### `racc`
+### `racc`
 
 The accumulator is mostly used as a destination register for arithmetic instructions.  
 In the ntlabi it is also used as a return value in certain circumstances (see [Stack](stack.md)).
 
-#### `rcmp`
+### `rcmp`
 
 The extra comparator operand is mostly used for the conditional execution of instructions.  
 `racc` is still the main register for the conditional execution! This is only a secondary operand when the condition relies on a comparison between two registers.  
 See [Instructions](instructions.md)
 
-#### `rip`
+### `rip`
 
 The instruction pointer is the pointer to the currently running opcode.  
 Writing to `rip` has no effect because it is just a clone of the internal program counter.
 
-#### `r7`..`r15`
+### `r7`..`r15`
 
 General purpose registers are never implicitly overriden by the CPU and has no special meaning, which makes them well-suited for intermediate results.  
 However, they still should be saved and restored properly as required by the ntlabi, which will be used by most toolchains and programs for ntl, see [Stack](stack.md).

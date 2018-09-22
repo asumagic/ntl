@@ -7,7 +7,7 @@ title: I/O and interrupts
 I/O and interrupts
 =====
 
-### Interrupts
+## Interrupts
 
 The CPU can be woken up by __4__ interrupts. An interrupt stops the operation of the CPU and can be triggered either by the user, either by a peripherial.  
 They can be enabled globally through the `_INTON` flag and enabled individually through the `_INTxON` flags.
@@ -24,7 +24,7 @@ The return address matches to the instruction that should have been executed whe
 - When interrupts are disabled (when `_INTON` and `_INT*ON` are not set), those interrupts are rejected and will never interrupt the CPU, even when reenabling interrupts.
 - When interrupts are enabled, but `_INTLOCK` is set, the interrupts will stack in a dedicated interrupt stack. This stack has a limited size, defined by the implementation, so pushing an interrupt to the interrupt stack will effectively reject the interrupt.
 
-#### CPU exceptions (Interrupt `0`)
+### CPU exceptions (Interrupt `0`)
 
 A CPU exception is a special interrupt that cannot be disabled. Unlike other interrupts, it requires a special ISR to handle the CPU exception ID, which is pushed on the stack as a parameter. When a CPU exception rises while `_INTLOCK` is set or `_INTON` is disabled, the CPU will halt. The following CPU exception IDs exist:
 
@@ -34,7 +34,7 @@ A CPU exception is a special interrupt that cannot be disabled. Unlike other int
 | `_ILLOP`      | `0x0001` | Illegal operation         |
 | `_UNIMPL`     | `0x0002` | Incomplete implementation |
 
-### Memory Mapped I/O
+## Memory Mapped I/O
 
 In order to interact with peripherials, ntl implementations may implement Memory Mapped I/O.  
 MMIO uses the same address space as memory. However, MMIO regions can be listened to by peripherials.
@@ -42,6 +42,6 @@ MMIO uses the same address space as memory. However, MMIO regions can be listene
 32KiB of the memory address space is reserved for MMIO, within the `0xC000-0xFFFF` range.  
 _Within the MMIO reserved region_, memory read operations are implementation-defined behavior.
 
-#### Reference implementation behavior
+## Reference implementation behavior
 
 The implementation-defined behavior depends on peripherials.

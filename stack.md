@@ -9,4 +9,4 @@ Using the Stack
 
 TODO
 
-### Functions
+## Functions

@@ -7,7 +7,7 @@ title: Instructions
 Instructions
 =====
 
-### Instruction encoding
+## Instruction encoding
 
 Opcodes are always encoded through **24** bits, but their structure varies.  
 
@@ -19,7 +19,7 @@ Opcodes are always encoded through **24** bits, but their structure varies.
 | `12`..`15` | Register B    | (Optional) Write-only register operand.                                                 |
 |  `8`..`23` | Immediate     | (Optional) Arbitrary value to be used by the instruction.                               |
 
-### Conditional execution
+## Conditional execution
 
 The conditional execution instruction determines whether an instruction should be executed or not, based on a given condition.  
 This generally involves the `racc` and `rcmp` registers.  
@@ -36,26 +36,7 @@ When the condition is not met, the CPU skips to the next opcode without any side
 | `?bet`     | `0x6`/`0b110` | `racc` >= `rcmp`                              | TBD    |
 | `?test`    | `0x7`/`0b111` | (`racc` & `rcmp`) != 0                        | TBD    |
 
-Example:
-
-```
-# racc = 0;
-loadi 0
-
-# if racc != 0, (which is false) jump to 'skip'
-?nz jpi skip
-
-# racc = 3;
-loadi 3
-
-.label skip
-
-# here racc = 3 because the conditional jump was skipped
-
-#...
-```
-
-### Instructions
+## Instructions
 
 | Mnemonic          | Arguments             | ID               | Description                                   | Cycles |
 |-------------------|-----------------------|------------------|-----------------------------------------------|--------|
@@ -86,9 +67,9 @@ loadi 3
 
 \*: Arithmetic operation results are stored in the accumulator register.
 
-#### Data transfer
+### Data transfer
 
-##### `mov rdst radd`
+#### `mov rdst radd`
 
 Copies register `rsrc` into register `rdst`.
 
@@ -96,7 +77,7 @@ Copies register `rsrc` into register `rdst`.
 rdst = rsrc;
 ```
 
-##### `loadw rdst raddr`
+#### `loadw rdst raddr`
 
 Copies memory at address `raddr` to the 8 lower bits of `rdst`.  
 Copies memory at address `raddr + 1` to the 8 higher bits of `rdst`.
@@ -105,7 +86,7 @@ Copies memory at address `raddr + 1` to the 8 higher bits of `rdst`.
 rdst = (memory[raddr]) & (memory[raddr + 1] << 8);
 ```
 
-##### `storew rsrc raddr`
+#### `storew rsrc raddr`
 
 Copies the 8 lower bits of `rsrc` to memory at address `raddr`.  
 Copies the 8 higher bits of `rsrc` to memory at address `raddr + 1`.
@@ -115,7 +96,7 @@ memory[raddr] = rsrc & 0x00FF;
 memory[raddr + 1] = rsrc >> 8;
 ```
 
-##### `loadb rdst raddr`
+#### `loadb rdst raddr`
 
 Copies memory at address `raddr` to the 8 lower bits of `rdst`, leaving the 8 upper bits of `rdst` untouched.
 
@@ -123,7 +104,7 @@ Copies memory at address `raddr` to the 8 lower bits of `rdst`, leaving the 8 up
 rdst = (rdst & 0xFF00) & memory[raddr];
 ```
 
-##### `storeb rsrc raddr`
+#### `storeb rsrc raddr`
 
 Copies the 8 lower bits of `rsrc` to memory at address `raddr`, ignoring the 8 upper bits of `rsrc`.
 
@@ -131,7 +112,7 @@ Copies the 8 lower bits of `rsrc` to memory at address `raddr`, ignoring the 8 u
 memory[raddr] = (rsrc & 0x00FF);
 ```
 
-##### `loadi imm`
+#### `loadi imm`
 
 Copies the immediate into `racc`.
 
@@ -139,9 +120,9 @@ Copies the immediate into `racc`.
 racc = imm;
 ```
 
-#### Arithmetic
+### Arithmetic
 
-##### `add ra rb`
+#### `add ra rb`
 
 Adds `rb` with `ra` and store the result to `racc`.
 
@@ -161,7 +142,7 @@ add racc r7
 # now racc = 42
 ```
 
-##### `sub ra rb`
+#### `sub ra rb`
 
 Subtracts `rb` from `ra` and store the result to `racc`
 
@@ -169,7 +150,7 @@ Subtracts `rb` from `ra` and store the result to `racc`
 racc = ra - rb;
 ```
 
-##### `and ra rb`
+#### `and ra rb`
 
 Stores the result of bitwise AND between `ra` and `rb` to `racc`
 
@@ -189,13 +170,13 @@ and racc r7
 # now racc = 0b0100
 ```
 
-##### `or ra rb`
+#### `or ra rb`
 
-##### `xor ra rb`
+#### `xor ra rb`
 
-##### `shl ra roff`
+#### `shl ra roff`
 
-##### `shr ra roff`
+#### `shr ra roff`
 
 Performs a bitshift of `ra` to the right by `roff` bits.  
 Bits created on the left (MSBs) are zeroed out.
@@ -216,9 +197,9 @@ shr r7 racc
 # now racc = 0b0010
 ```
 
-#### Jumps
+### Jumps
 
-##### `jpi iaddr`
+#### `jpi iaddr`
 
 Sets the program counter for the next opcode to `iaddr`, effectively "jumping" to the opcode refered to by this instruction.
 
@@ -246,7 +227,7 @@ sub racc r7
 ?nz jpi loop_begin
 ```
 
-##### `jp raddr`
+#### `jp raddr`
 
 Sets the program couner for the next opcode to `raddr`.
 
@@ -288,7 +269,7 @@ jp racc
 	# do yet another thing, if r7 == 2
 ```
 
-#### `ret`
+### `ret`
 
 Returns from a subroutine.
 
@@ -301,7 +282,7 @@ rsp -= 2;
 
 Example: See `calli`.
 
-#### `calli iaddr`
+### `calli iaddr`
 
 Calls a subroutine.
 
@@ -328,7 +309,7 @@ add racc, racc
 ret
 ```
 
-#### `call raddr`
+### `call raddr`
 
 Similar to what `jp` is to `jpi`, `call` calls a subroutine like `calli` but with an address determined by a register rather than an immediate.
 
@@ -341,7 +322,7 @@ memory[rsp + 1] = (pc + 3) >> 8;
 pc = raddr;
 ```
 
-#### `hlt`
+### `hlt`
 
 Halts the CPU until an interrupt is raised by any of the interrupt-enabled peripherials.
 
@@ -353,7 +334,7 @@ When woken up by an interrupt in a halted state, the ISR will be called as usual
 
 See [IO and interrupts](io.md)
 
-#### `int`
+### `int`
 
 Manually generate a CPU exception with ID `_USER` (`0`), as if it was generated by the current opcode.
 
