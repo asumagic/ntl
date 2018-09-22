@@ -9,31 +9,32 @@ Instructions
 
 ### Instruction encoding
 
-Opcodes are always encoded through **24** bits, but the internal structure of the instruction may vary.  
+Opcodes are always encoded through **24** bits, but their structure varies.  
 
 | Bits       | Name          | Description                                                                             |
 |------------|---------------|-----------------------------------------------------------------------------------------|
-|  `0`..`2`  | Conditional   | Comparison instruction that determines whether the instruction will be executed or not. |
-|  `3`..`7`  | Instruction   | The actual type of operation that will be performed if the instruction is executed.     |
-|  `8`..`11` | Register A    | If used by the instruction, a register operand, which may or may not be written to.     |
-| `12`..`15` | Register B    | If used by the instruction, a register operand, which is never written to.              |
-|  `8`..`23` | Immediate     | If used by the instruction, a value embedded within the opcode.                         |
+|  `0`..`2`  | Conditional   | Conditional execution instruction.                                                      |
+|  `3`..`7`  | Instruction   | Type of executed instruction.                                                           |
+|  `8`..`11` | Register A    | (Optional) Read-write register operand.                                                 |
+| `12`..`15` | Register B    | (Optional) Write-only register operand.                                                 |
+|  `8`..`23` | Immediate     | (Optional) Arbitrary value to be used by the instruction.                               |
 
-### Conditionals
+### Conditional execution
 
-The conditional in an instruction, when set to a meaningful value, determines whether the instruction should be executed or not.  
-When the condition is not met, the CPU skips to the next opcode.
+The conditional execution instruction determines whether an instruction should be executed or not, based on a given condition.  
+This generally involves the `racc` and `rcmp` registers.  
+When the condition is not met, the CPU skips to the next opcode without any side effects.
 
 | Mnemonic   | ID            | Allows execution when                         | Cycles |
 |------------|---------------|-----------------------------------------------|--------|
 | (none)     | `0x0`/`0b000` | Always                                        | `0`    |
-| `?z`       | `0x1`/`0b001` | `racc` is zero                                | TBD    |
-| `?nz`      | `0x2`/`0b010` | `racc` is not zero                            | TBD    |
-| `?eq`      | `0x3`/`0b011` | `racc` equals `rcmp`                          | TBD    |
-| `?neq`     | `0x4`/`0b100` | `racc` is not equal to `rcmp`                 | TBD    |
-| `?bt`      | `0x5`/`0b101` | `racc` is bigger than `rcmp` but not equal    | TBD    |
-| `?bet`     | `0x6`/`0b110` | `racc` is bigger than `rcmp` *or* equal       | TBD    |
-| `?test`    | `0x7`/`0b111` | `racc` bitwise and `rcmp` is not zero         | TBD    |
+| `?z`       | `0x1`/`0b001` | `racc` = 0                                    | TBD    |
+| `?nz`      | `0x2`/`0b010` | `racc` != 0                                   | TBD    |
+| `?eq`      | `0x3`/`0b011` | `racc` = `rcmp`                               | TBD    |
+| `?neq`     | `0x4`/`0b100` | `racc` != `rcmp`                              | TBD    |
+| `?bt`      | `0x5`/`0b101` | `racc` > `rcmp`                               | TBD    |
+| `?bet`     | `0x6`/`0b110` | `racc` >= `rcmp`                              | TBD    |
+| `?test`    | `0x7`/`0b111` | (`racc` & `rcmp`) != 0                        | TBD    |
 
 Example:
 
@@ -58,14 +59,14 @@ loadi 3
 
 | Mnemonic          | Arguments             | ID               | Description                                   | Cycles |
 |-------------------|-----------------------|------------------|-----------------------------------------------|--------|
-| **Data transfer** |                       |        `0b00xxx` | *Data transfer across memories*               |        |
-| `mov`             | `rdst rsrc`           | `0x00`/`0b00000` | Register -> Register copy                     | TBD    |
-| `loadw`           | `rdst raddr`          | `0x01`/`0b00001` | Memory word -> Register copy                  | TBD    |
-| `storew`          | `rsrc raddr`          | `0x02`/`0b00010` | Register -> Memory word copy                  | TBD    |
-| `loadb`           | `rdst raddr`          | `0x03`/`0b00011` | Register -> Memory byte copy                  | TBD    |
-| `storeb`          | `rsrc raddr`          | `0x04`/`0b00100` | Memory byte -> register copy                  | TBD    |
-| `loadi`           | `imm`                 | `0x07`/`0b00111` | Immediate -> `racc` copy                      | TBD    |
-| **Arithmetic**\*  |                       |        `0b01xxx` | *Two operands arithmetic*                     |        |
+| **Data transfer** |                       |        `0b00xxx` | *Data copy*                                   |        |
+| `mov`             | `rdst rsrc`           | `0x00`/`0b00000` | Reg -> Reg                                    | TBD    |
+| `loadw`           | `rdst raddr`          | `0x01`/`0b00001` | Mem word -> Reg                               | TBD    |
+| `storew`          | `rsrc raddr`          | `0x02`/`0b00010` | Reg -> Mem word                               | TBD    |
+| `loadb`           | `rdst raddr`          | `0x03`/`0b00011` | Reg -> Mem byte                               | TBD    |
+| `storeb`          | `rsrc raddr`          | `0x04`/`0b00100` | Mem byte -> Reg                               | TBD    |
+| `loadi`           | `imm`                 | `0x07`/`0b00111` | Immediate -> `racc`                           | TBD    |
+| **Arithmetic**\*  |                       |        `0b01xxx` | *Two operand arithmetic*                      |        |
 | `add`             | `ra rb`               | `0x08`/`0b01000` | Integer addition                              | TBD    |
 | `sub`             | `ra rb`               | `0x09`/`0b01001` | Integer subtraction                           | TBD    |
 | `and`             | `ra rb`               | `0x0A`/`0b01011` | Bitwise AND                                   | TBD    |
@@ -83,7 +84,7 @@ loadi 3
 | `hlt`             |                       | `0x18`/`0b11000` | Halt CPU until interrupt                      | TBD    |
 | `int`             |                       | `0x19`/`0b11001` | Raise a CPU exception                         | TBD    |
 
-\*: Arithmetic operation results are stored to the accumulator register.
+\*: Arithmetic operation results are stored in the accumulator register.
 
 #### Data transfer
 
