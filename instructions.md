@@ -271,19 +271,6 @@ jp racc
 	# do yet another thing, if r7 == 2
 ```
 
-### `ret`
-
-Returns from a subroutine.
-
-This reads the stored return target into the program counter from the stack then decrements the stack pointer by two.
-
-```cpp
-pc = (memory[rsp]) | (memory[rsp + 1] << 8);
-rsp -= 2;
-```
-
-Example: See `calli`.
-
 ### `calli iaddr`
 
 Calls a subroutine.
@@ -323,6 +310,19 @@ memory[rsp] = (pc + 3) & 0x00FF;
 memory[rsp + 1] = (pc + 3) >> 8;
 pc = raddr;
 ```
+
+### `ret`
+
+Returns from a subroutine.
+
+This reads the stored return target into the program counter from the stack then decrements the stack pointer by two.
+
+```cpp
+pc = (memory[rsp]) | (memory[rsp + 1] << 8);
+rsp -= 2;
+```
+
+Example: See `calli`.
 
 ### `hlt`
 
