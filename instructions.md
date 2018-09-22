@@ -41,12 +41,12 @@ When the condition is not met, the CPU skips to the next opcode without any side
 | Mnemonic          | Arguments             | ID               | Description                                   | Cycles |
 |-------------------|-----------------------|------------------|-----------------------------------------------|--------|
 | **Data transfer** |                       |        `0b00xxx` | *Data copy*                                   |        |
-| `mov`             | `rdst rsrc`           | `0x00`/`0b00000` | Reg -> Reg                                    | TBD    |
-| `loadw`           | `rdst raddr`          | `0x01`/`0b00001` | Mem word -> Reg                               | TBD    |
-| `storew`          | `rsrc raddr`          | `0x02`/`0b00010` | Reg -> Mem word                               | TBD    |
-| `loadb`           | `rdst raddr`          | `0x03`/`0b00011` | Reg -> Mem byte                               | TBD    |
-| `storeb`          | `rsrc raddr`          | `0x04`/`0b00100` | Mem byte -> Reg                               | TBD    |
-| `loadi`           | `imm`                 | `0x07`/`0b00111` | Immediate -> `racc`                           | TBD    |
+| `mov`             | `rdst rsrc`           | `0x00`/`0b00000` | 16-bit: Reg -> Reg                            | TBD    |
+| `loadw`           | `rdst raddr`          | `0x01`/`0b00001` | 16-bit: Mem -> Reg                            | TBD    |
+| `storew`          | `rsrc raddr`          | `0x02`/`0b00010` | 16-bit: Reg -> Mem                            | TBD    |
+| `loadb`           | `rdst raddr`          | `0x03`/`0b00011` | 8-bit: Reg -> Mem                             | TBD    |
+| `storeb`          | `rsrc raddr`          | `0x04`/`0b00100` | 8-bit: Mem -> Reg                             | TBD    |
+| `loadi`           | `imm`                 | `0x07`/`0b00111` | 16-bit: Immediate -> `racc`                   | TBD    |
 | **Arithmetic**\*  |                       |        `0b01xxx` | *Two operand arithmetic*                      |        |
 | `add`             | `ra rb`               | `0x08`/`0b01000` | Integer addition                              | TBD    |
 | `sub`             | `ra rb`               | `0x09`/`0b01001` | Integer subtraction                           | TBD    |
@@ -72,6 +72,8 @@ When the condition is not met, the CPU skips to the next opcode without any side
 #### `mov rdst radd`
 
 Copies register `rsrc` into register `rdst`.
+
+_Note: Opcode `0x000000` is `mov rfl rfl`, which is effectively a no-op._
 
 ```cpp
 rdst = rsrc;
