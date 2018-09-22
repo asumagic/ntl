@@ -2,6 +2,8 @@
 title: Instructions
 ---
 
+[Jump to main page](README.md)
+
 Instructions
 =====
 
@@ -77,7 +79,7 @@ loadi 3
 | `ret`             |                       | `0x1A`/`0b10010` | Return from function                          | TBD    |
 | `calli`           | `iaddr`               | `0x1B`/`0b10011` | Call to immediate address function            | TBD    |
 | `call`            | `raddr`               | `0x1C`/`0b10100` | Call to register value address function       | TBD    |
-| **Interruptions** |                       |        `0b11xxx` | *CPU interrupts*                              |        |
+| **Interrupts**    |                       |        `0b11xxx` | *CPU interrupts*                              |        |
 | `hlt`             |                       | `0x18`/`0b11000` | Halt CPU until interrupt                      | TBD    |
 | `int`             |                       | `0x19`/`0b11001` | Raise a CPU exception                         | TBD    |
 

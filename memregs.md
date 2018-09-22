@@ -2,6 +2,8 @@
 title: Memory and registers
 ---
 
+[Jump to main page](README.md)
+
 Memory and registers
 =====
 

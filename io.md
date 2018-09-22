@@ -2,6 +2,8 @@
 title: I/O and interrupts
 ---
 
+[Jump to main page](README.md)
+
 I/O and interrupts
 =====
 
