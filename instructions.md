@@ -56,11 +56,11 @@ When the condition is not met, the CPU skips to the next opcode without any side
 | `shl`             | `ra roff`             | `0x0D`/`0b01110` | Bitwise left shift                            | TBD    |
 | `shr`             | `ra roff`             | `0x0E`/`0b01111` | Bitwise right shift                           | TBD    |
 | **Jump**          |                       |        `0b10xxx` | *Control flow disruption*                     |        |
-| `jpi`             | `iaddr`               | `0x18`/`0b10000` | Jump to immediate address                     | TBD    |
-| `jp`              | `raddr`               | `0x19`/`0b10001` | Jump to register value address                | TBD    |
-| `ret`             |                       | `0x1A`/`0b10010` | Return from function                          | TBD    |
-| `calli`           | `iaddr`               | `0x1B`/`0b10011` | Call to immediate address function            | TBD    |
-| `call`            | `raddr`               | `0x1C`/`0b10100` | Call to register value address function       | TBD    |
+| `jpi`             | `iaddr`               | `0x10`/`0b10000` | Jump to immediate address                     | TBD    |
+| `jp`              | `raddr`               | `0x11`/`0b10001` | Jump to register value address                | TBD    |
+| `calli`           | `iaddr`               | `0x12`/`0b10010` | Call to immediate address function            | TBD    |
+| `call`            | `raddr`               | `0x13`/`0b10011` | Call to register value address function       | TBD    |
+| `ret`             |                       | `0x14`/`0b10100` | Return from function                          | TBD    |
 | **Interrupts**    |                       |        `0b11xxx` | *CPU interrupts*                              |        |
 | `hlt`             |                       | `0x18`/`0b11000` | Halt CPU until interrupt                      | TBD    |
 | `int`             |                       | `0x19`/`0b11001` | Raise a CPU exception                         | TBD    |
