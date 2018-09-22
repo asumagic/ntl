@@ -9,15 +9,19 @@ Instructions
 
 ## Instruction encoding
 
-Opcodes are always encoded through **24** bits, but their structure varies.  
+Opcodes are always encoded through **24** bits, but their structure varies depending on the opcode type:
+
+- N-type: No operand is used by the instruction.
+- R-type: One or two register operands are used.
+- I-type: One 16-bit immediate operand is used by the instruction.
 
 | Bits       | Name          | Description                                                                             |
 |------------|---------------|-----------------------------------------------------------------------------------------|
 |  `0`..`2`  | Conditional   | Conditional execution instruction.                                                      |
 |  `3`..`7`  | Instruction   | Type of executed instruction.                                                           |
-|  `8`..`11` | Register A    | (Optional) Read-write register operand.                                                 |
-| `12`..`15` | Register B    | (Optional) Write-only register operand.                                                 |
-|  `8`..`23` | Immediate     | (Optional) Arbitrary value to be used by the instruction.                               |
+|  `8`..`11` | Register A    | (R-type) Read-write register operand.                                                   |
+| `12`..`15` | Register B    | (R-type) Write-only register operand.                                                   |
+|  `8`..`23` | Immediate     | (I-type) Arbitrary value to be used by the instruction.                                 |
 
 ## Conditional execution
 
@@ -38,32 +42,32 @@ When the condition is not met, the CPU skips to the next opcode without any side
 
 ## Instructions
 
-| Mnemonic          | Arguments             | ID               | Description                                   | Cycles |
-|-------------------|-----------------------|------------------|-----------------------------------------------|--------|
-| **Data transfer** |                       |        `0b00xxx` | *Data copy*                                   |        |
-| `mov`             | `rdst rsrc`           | `0x00`/`0b00000` | 16-bit: Reg -> Reg                            | TBD    |
-| `loadw`           | `rdst raddr`          | `0x01`/`0b00001` | 16-bit: Mem -> Reg                            | TBD    |
-| `storew`          | `rsrc raddr`          | `0x02`/`0b00010` | 16-bit: Reg -> Mem                            | TBD    |
-| `loadb`           | `rdst raddr`          | `0x03`/`0b00011` | 8-bit: Reg -> Mem                             | TBD    |
-| `storeb`          | `rsrc raddr`          | `0x04`/`0b00100` | 8-bit: Mem -> Reg                             | TBD    |
-| `loadi`           | `imm`                 | `0x07`/`0b00111` | 16-bit: Immediate -> `racc`                   | TBD    |
-| **Arithmetic**\*  |                       |        `0b01xxx` | *Two operand arithmetic*                      |        |
-| `add`             | `ra rb`               | `0x08`/`0b01000` | Integer addition                              | TBD    |
-| `sub`             | `ra rb`               | `0x09`/`0b01001` | Integer subtraction                           | TBD    |
-| `and`             | `ra rb`               | `0x0A`/`0b01011` | Bitwise AND                                   | TBD    |
-| `or`              | `ra rb`               | `0x0B`/`0b01100` | Bitwise OR                                    | TBD    |
-| `xor`             | `ra rb`               | `0x0C`/`0b01101` | Bitwise XOR                                   | TBD    |
-| `shl`             | `ra roff`             | `0x0D`/`0b01110` | Bitwise left shift                            | TBD    |
-| `shr`             | `ra roff`             | `0x0E`/`0b01111` | Bitwise right shift                           | TBD    |
-| **Jump**          |                       |        `0b10xxx` | *Control flow disruption*                     |        |
-| `jpi`             | `iaddr`               | `0x10`/`0b10000` | Jump to immediate address                     | TBD    |
-| `jp`              | `raddr`               | `0x11`/`0b10001` | Jump to register value address                | TBD    |
-| `calli`           | `iaddr`               | `0x12`/`0b10010` | Call to immediate address function            | TBD    |
-| `call`            | `raddr`               | `0x13`/`0b10011` | Call to register value address function       | TBD    |
-| `ret`             |                       | `0x14`/`0b10100` | Return from function                          | TBD    |
-| **Interrupts**    |                       |        `0b11xxx` | *CPU interrupts*                              |        |
-| `hlt`             |                       | `0x18`/`0b11000` | Halt CPU until interrupt                      | TBD    |
-| `int`             |                       | `0x19`/`0b11001` | Raise a CPU exception                         | TBD    |
+| Mnemonic          | Type | Arguments             | ID               | Explanation                                   | Cycles |
+|-------------------|------|-----------------------|------------------|-----------------------------------------------|--------|
+| **Data transfer** |      |                       |        `0b00xxx` | *Data copy*                                   |        |
+| `mov`             | R    | `rdst rsrc`           | `0x00`/`0b00000` | 16-bit: Reg -> Reg                            | TBD    |
+| `loadw`           | R    | `rdst raddr`          | `0x01`/`0b00001` | 16-bit: Mem -> Reg                            | TBD    |
+| `storew`          | R    | `rsrc raddr`          | `0x02`/`0b00010` | 16-bit: Reg -> Mem                            | TBD    |
+| `loadb`           | R    | `rdst raddr`          | `0x03`/`0b00011` | 8-bit: Reg -> Mem                             | TBD    |
+| `storeb`          | R    | `rsrc raddr`          | `0x04`/`0b00100` | 8-bit: Mem -> Reg                             | TBD    |
+| `loadi`           | I    | `imm`                 | `0x07`/`0b00111` | 16-bit: Immediate -> `racc`                   | TBD    |
+| **Arithmetic**\*  |      |                       |        `0b01xxx` | *Two operand arithmetic*                      |        |
+| `add`             | R    | `ra rb`               | `0x08`/`0b01000` | Integer addition                              | TBD    |
+| `sub`             | R    | `ra rb`               | `0x09`/`0b01001` | Integer subtraction                           | TBD    |
+| `and`             | R    | `ra rb`               | `0x0A`/`0b01011` | Bitwise AND                                   | TBD    |
+| `or`              | R    | `ra rb`               | `0x0B`/`0b01100` | Bitwise OR                                    | TBD    |
+| `xor`             | R    | `ra rb`               | `0x0C`/`0b01101` | Bitwise XOR                                   | TBD    |
+| `shl`             | R    | `ra roff`             | `0x0D`/`0b01110` | Bitwise left shift                            | TBD    |
+| `shr`             | R    | `ra roff`             | `0x0E`/`0b01111` | Bitwise right shift                           | TBD    |
+| **Jump**          |      |                       |        `0b10xxx` | *Control flow disruption*                     |        |
+| `jpi`             | I    | `iaddr`               | `0x10`/`0b10000` | Jump to immediate address                     | TBD    |
+| `jp`              | R    | `raddr`               | `0x11`/`0b10001` | Jump to register value address                | TBD    |
+| `calli`           | I    | `iaddr`               | `0x12`/`0b10010` | Call to immediate address function            | TBD    |
+| `call`            | R    | `raddr`               | `0x13`/`0b10011` | Call to register value address function       | TBD    |
+| `ret`             | N    |                       | `0x14`/`0b10100` | Return from function                          | TBD    |
+| **Interrupts**    |      |                       |        `0b11xxx` | *CPU interrupts*                              |        |
+| `hlt`             | N    |                       | `0x18`/`0b11000` | Halt CPU until interrupt                      | TBD    |
+| `int`             | N    |                       | `0x19`/`0b11001` | Raise a CPU exception                         | TBD    |
 
 \*: Arithmetic operation results are stored in the accumulator register.
 
